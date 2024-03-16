@@ -1,0 +1,16 @@
+# Dependencies
+boto3
+pydantic
+pydantic_settings
+
+# gRPC
+grpcio
+grpcio-tools
+
+# Dev dependencies
+setuptools
+
+# Test dependencies
+mock
+moto[all]
+pytest

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package asman.example;
+
+message Request {
+    string data = 1;
+}
