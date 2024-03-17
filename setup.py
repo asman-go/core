@@ -9,8 +9,6 @@ __author__ = 'Petrakov Oleg'
 __author_email__ = 'murami.ike@gmail.com'
 __license__ = 'MIT'
 
-print('setup',find_packages(where="src"))
-
 setup(
     name=__title__,
     version=__version__,
