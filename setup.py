@@ -9,6 +9,7 @@ __author__ = 'Petrakov Oleg'
 __author_email__ = 'murami.ike@gmail.com'
 __license__ = 'MIT'
 
+
 setup(
     name=__title__,
     version=__version__,
