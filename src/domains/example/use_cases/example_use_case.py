@@ -1,5 +1,5 @@
-from core.arch import AbstractUseCase
-from core.adapters.db import DynamoDB, DynamoDBConfig
+from asman.core.arch import AbstractUseCase
+from asman.core.adapters.db import DynamoDB, DynamoDBConfig
 
 from ..domain.config import Config
 from ..repo.example_repository import ExampleRepository

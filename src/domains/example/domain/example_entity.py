@@ -1,6 +1,6 @@
 import pydantic
 
-from core.arch import Entity
+from asman.core.arch import Entity
 
 from .exceptions import ExampleException
 

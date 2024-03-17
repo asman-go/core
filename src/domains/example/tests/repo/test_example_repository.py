@@ -1,4 +1,4 @@
-from domains.example.repo.example_repository import ExampleRepository
+from asman.domains.example.repo.example_repository import ExampleRepository
 
 
 def test_example_repository_create(dynamodb, dynamodb_table_name):

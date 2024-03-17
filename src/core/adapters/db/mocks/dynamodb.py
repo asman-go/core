@@ -2,7 +2,7 @@ import mock
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
-from core.adapters.db import DynamoDB
+from asman.core.adapters.db import DynamoDB
 
 
 class MockDynamoDB(DynamoDB):

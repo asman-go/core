@@ -1,15 +1,15 @@
 import pytest
 
-from domains.example.domain.config import Config
-from core.adapters.db import MockDynamoDB, DynamoDBConfig
-from domains.example.domain.example_entity import ExampleEntity
+from asman.domains.example.domain.config import Config
+from asman.core.adapters.db import MockDynamoDB, DynamoDBConfig
+from asman.domains.example.domain.example_entity import ExampleEntity
 
-from domains.example.domain.dynamodb_schema import (
+from asman.domains.example.domain.dynamodb_schema import (
     DYNAMODB_TABLE_NAME,
     DYNAMODB_KEY_SCHEMA,
     DYNAMODB_ATTRIBUTE_DEFINITIONS,
 )
-from domains.example.repo.example_repository import ExampleRepository
+from asman.domains.example.repo.example_repository import ExampleRepository
 
 
 @pytest.fixture

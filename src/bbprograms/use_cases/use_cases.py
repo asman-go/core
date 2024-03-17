@@ -1,5 +1,5 @@
-from core.arch import AbstractUseCase, RequestEntity
-from core.adapters.db import DynamoDB, DynamoDBConfig
+from asman.core.arch import AbstractUseCase, RequestEntity
+from asman.core.adapters.db import DynamoDB, DynamoDBConfig
 
 from ..models import (
     PROGRAMMES_TABLE_KEY_SCHEMA,

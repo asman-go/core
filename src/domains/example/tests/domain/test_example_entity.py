@@ -1,7 +1,7 @@
 import pytest
 
-from domains.example.domain.example_entity import ExampleEntity
-from domains.example.domain.exceptions import ExampleException
+from asman.domains.example.domain.example_entity import ExampleEntity
+from asman.domains.example.domain.exceptions import ExampleException
 
 
 def test_example_entity_create():

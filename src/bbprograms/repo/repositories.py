@@ -1,8 +1,8 @@
 from typing import Sequence
 
-from core.adapters.db import Database
-from core.exceptions import NotImplementedException
-from core.arch import AbstractRepository
+from asman.core.adapters.db import Database
+from asman.core.exceptions import NotImplementedException
+from asman.core.arch import AbstractRepository
 
 from ..domain.entities import BugBountyProgramEntity
 from ..models import PROGRAMMES_TABLE_NAME

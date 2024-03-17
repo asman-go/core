@@ -1,6 +1,6 @@
 import pytest
 
-from bbprograms import (
+from asman.bbprograms import (
     AssetEntity,
     InvalidAssetTypeException,
 )

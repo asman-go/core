@@ -9,7 +9,9 @@ __author__ = 'Petrakov Oleg'
 __author_email__ = 'murami.ike@gmail.com'
 __license__ = 'MIT'
 
+print(find_packages(where="src"))
 
+# https://xebia.com/blog/a-practical-guide-to-using-setup-py/
 setup(
     name=__title__,
     version=__version__,
@@ -19,23 +21,37 @@ setup(
     author_email=__author_email__,
 
     packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    package_dir={
+        "": "src"
+        # "asman.bbprograms": "src/bbprograms",
+        # "asman.core": "src/core",
+        # "asman.domains": "src/domains",
+    },
     python_requires=">=3.10",
     install_requires=[
         'boto3',
-        'pydantic',
-        'pydantic_settings',
         'grpcio',
         'grpcio-tools',
-        'setuptools',
-        'mock',
-        'moto[all]',
-        'pytest'
+        'pydantic',
+        'pydantic_settings',
     ],
-    # extras_require={
-    #     'dev': ['check-manifest'],
-    #     'test': ['coverage']
-    # },
+    setup_requires=[
+        'grpcio-tools',
+        'setuptools',
+    ],
+    # tests_require=[
+    #     'mock',
+    #     'moto[all]',
+    #     'pytest'
+    # ],
+    extras_require={
+        'dev': [
+            'check-manifest'
+        ],
+        'test': [
+            'coverage'
+        ]
+    },
     license=__license__,
     description=__description__
 )

@@ -1,4 +1,4 @@
-from core.adapters.db import DynamoDB
+from asman.core.adapters.db import DynamoDB
 
 
 def test_dynamodb_instance_create(

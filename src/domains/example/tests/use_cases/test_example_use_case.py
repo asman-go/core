@@ -1,7 +1,7 @@
 import pytest
 
-from domains.example.use_cases.example_use_case import ExampleUseCase
-from domains.example import Request
+from asman.domains.example.use_cases.example_use_case import ExampleUseCase
+from asman.domains.example import Request
 
 
 @pytest.fixture

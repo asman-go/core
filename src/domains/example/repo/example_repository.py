@@ -1,7 +1,7 @@
 from typing import Sequence
-from core.adapters.db.base import Database
-from core.arch import AbstractRepository
-from core.exceptions import NotImplementedException
+from asman.core.adapters.db.base import Database
+from asman.core.arch import AbstractRepository
+from asman.core.exceptions import NotImplementedException
 
 from ..domain.example_entity import ExampleEntity
 

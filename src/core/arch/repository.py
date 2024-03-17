@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence
 
-from core.adapters.db import Database
-from core.arch import Entity
+from asman.core.adapters.db import Database
+from asman.core.arch import Entity
 
 
 class AbstractRepository(ABC):

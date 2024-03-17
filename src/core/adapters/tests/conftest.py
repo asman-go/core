@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 import pytest
 
-from core.adapters.db import DynamoDB
+from asman.core.adapters.db import DynamoDB
 
 
 class Config(BaseSettings):

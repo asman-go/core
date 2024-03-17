@@ -1,0 +1,4 @@
+# Test dependencies
+mock
+moto[all]
+pytest
