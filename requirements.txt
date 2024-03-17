@@ -10,6 +10,9 @@ grpcio-tools
 # Dev dependencies
 setuptools
 
+# linters
+flake8
+
 # Test dependencies
 mock
 moto[all]

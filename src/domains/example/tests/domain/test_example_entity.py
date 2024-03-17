@@ -1,9 +1,7 @@
 import pytest
 
-from src.domains.example.domain import (
-    ExampleEntity,
-    ExampleException,
-)
+from domains.example.domain.example_entity import ExampleEntity
+from domains.example.domain.exceptions import ExampleException
 
 
 def test_example_entity_create():
@@ -19,7 +17,7 @@ def test_example_entity_create():
 
 def test_example_entity_create_throws_example_exception():
     with pytest.raises(ExampleException) as exc:
-        entity = ExampleEntity(
+        ExampleEntity(
             address='1'
         )
 

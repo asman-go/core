@@ -6,7 +6,9 @@ from .base import Database
 
 
 class DynamoDBConfig(pydantic_settings.BaseSettings):
-    DOCUMENT_API_ENDPOINT: str = pydantic.Field(default="https://example.com/path/to/your/db")
+    DOCUMENT_API_ENDPOINT: str = pydantic.Field(
+        default="https://example.com/path/to/your/db"
+    )
     REGION_NAME: str = pydantic.Field(default="ru-central1")
     AWS_ACCESS_KEY_ID: str = pydantic.Field(default="<key-id>")
     AWS_SECRET_ACCESS_KEY: str = pydantic.Field(default="<secret-access-key>")
@@ -15,11 +17,11 @@ class DynamoDBConfig(pydantic_settings.BaseSettings):
 class DynamoDB(Database):
 
     def __init__(
-            self,
-            config: DynamoDBConfig,
-            key_schema, 
-            attribute_definitions
-        ) -> None:
+                self,
+                config: DynamoDBConfig,
+                key_schema,
+                attribute_definitions
+            ) -> None:
 
         self.key_schema = key_schema
         self.attribute_definitions = attribute_definitions
@@ -41,11 +43,11 @@ class DynamoDB(Database):
         )
 
     def _create_table(
-            self,
-            table_name: str,
-            key_schema,
-            attribute_definitions
-        ):
+                self,
+                table_name: str,
+                key_schema,
+                attribute_definitions
+            ):
 
         table = self._resource.create_table(
             TableName=table_name,
@@ -61,11 +63,11 @@ class DynamoDB(Database):
         return table
 
     def _get_table(
-            self,
-            table_name: str,
-            key_schema,
-            attribute_definitions
-        ):
+                self,
+                table_name: str,
+                key_schema,
+                attribute_definitions
+            ):
 
         tables = self._client.list_tables()['TableNames']
         if table_name not in tables:
@@ -89,7 +91,11 @@ class DynamoDB(Database):
             Item=data.model_dump()  # data.dict() is deprecated
         )
 
-    def get_item(self, table_name: str, item_id: pydantic.BaseModel) -> pydantic.BaseModel:
+    def get_item(
+                self,
+                table_name: str,
+                item_id: pydantic.BaseModel
+            ) -> pydantic.BaseModel:
         response = self._client.get_item(
             TableName=table_name,
             Key=item_id

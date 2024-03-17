@@ -1,7 +1,7 @@
 import pydantic
 import typing
 
-from src.core.arch import Entity
+from core.arch import Entity
 
 from .exceptions import (
     InvalidAssetTypeException,

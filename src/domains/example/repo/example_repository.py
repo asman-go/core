@@ -1,9 +1,9 @@
 from typing import Sequence
-from src.core.adapters.db.base import Database
-from src.core.arch import AbstractRepository
-from src.core.exceptions import NotImplementedException
+from core.adapters.db.base import Database
+from core.arch import AbstractRepository
+from core.exceptions import NotImplementedException
 
-from ..domain import ExampleEntity
+from ..domain.example_entity import ExampleEntity
 
 
 class ExampleRepository(AbstractRepository):
@@ -17,12 +17,12 @@ class ExampleRepository(AbstractRepository):
     def update(self, entity: ExampleEntity) -> ExampleEntity:
         self.database.upsert(self.table_name, entity)
         return entity
-    
+
     def get_by_id(self, entity_id) -> ExampleEntity | None:
         return self.database.get_item(self.table_name, entity_id)
 
     def delete(self, entity_id):
         raise NotImplementedException
-    
+
     def list(self) -> Sequence[ExampleEntity] | None:
         raise NotImplementedException

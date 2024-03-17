@@ -1,7 +1,7 @@
 import pytest
 
-from src.domains.example.use_cases import ExampleUseCase
-from src.domains.example.api.schema_pb2 import Request
+from domains.example.use_cases.example_use_case import ExampleUseCase
+from domains.example import Request
 
 
 @pytest.fixture

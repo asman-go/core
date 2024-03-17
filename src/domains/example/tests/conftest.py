@@ -1,17 +1,15 @@
 import pytest
 
-from moto import mock_dynamodb
-from pydantic_settings import BaseSettings
+from domains.example.domain.config import Config
+from core.adapters.db import MockDynamoDB, DynamoDBConfig
+from domains.example.domain.example_entity import ExampleEntity
 
-from src.domains.example.domain import Config
-from src.core.adapters.db import MockDynamoDB, DynamoDBConfig
-from src.domains.example.domain import ExampleEntity
-from src.domains.example.domain import (
+from domains.example.domain.dynamodb_schema import (
     DYNAMODB_TABLE_NAME,
     DYNAMODB_KEY_SCHEMA,
     DYNAMODB_ATTRIBUTE_DEFINITIONS,
 )
-from src.domains.example.repo import ExampleRepository
+from domains.example.repo.example_repository import ExampleRepository
 
 
 @pytest.fixture
@@ -20,10 +18,9 @@ def example_entity():
         address='SOME_ADDRESS'
     )
 
+
 @pytest.fixture
-@mock_dynamodb
 def example_repository(dynamodb, dynamodb_table_name):
-    # print('example_repository', 'fixture', dynamodb)
     return ExampleRepository(dynamodb, dynamodb_table_name)
 
 
@@ -66,8 +63,11 @@ def dynamodb_config() -> DynamoDBConfig:
 
 
 @pytest.fixture
-# @mock_dynamodb
-def dynamodb(dynamodb_config, dynamodb_key_schema, dynamodb_attribute_definitions):
+def dynamodb(
+            dynamodb_config,
+            dynamodb_key_schema,
+            dynamodb_attribute_definitions
+        ):
 
     db = MockDynamoDB(
         dynamodb_config,

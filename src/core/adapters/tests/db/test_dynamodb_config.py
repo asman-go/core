@@ -1,4 +1,4 @@
-from src.core.adapters.db import DynamoDBConfig
+from core.adapters.db import DynamoDBConfig
 
 
 def test_dynamodb_config_create(monkeypatch):

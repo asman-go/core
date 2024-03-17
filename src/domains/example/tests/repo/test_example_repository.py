@@ -1,9 +1,4 @@
-import pytest
-
-# from moto import mock_dynamodb
-from src.core.exceptions import NotImplementedException
-
-from src.domains.example.repo import ExampleRepository
+from domains.example.repo.example_repository import ExampleRepository
 
 
 def test_example_repository_create(dynamodb, dynamodb_table_name):

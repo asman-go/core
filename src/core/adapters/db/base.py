@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 class Database(ABC):
     @abstractmethod
-    def __init__(self, config: pydantic.BaseModel, *argv) -> None:
+    def __init__(self, config: BaseSettings, *argv) -> None:
         ...
 
     @abstractmethod

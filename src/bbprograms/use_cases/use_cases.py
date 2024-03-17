@@ -1,18 +1,16 @@
-from ..domain import BugBountyProgramEntity
-from src.core.models import Config
-from src.core.arch import AbstractUseCase, RequestEntity
-from src.core.adapters.db import DynamoDB
+from core.arch import AbstractUseCase, RequestEntity
+from core.adapters.db import DynamoDB, DynamoDBConfig
 
 from ..models import (
     PROGRAMMES_TABLE_KEY_SCHEMA,
     PROGRAMMES_TABLE_ATTRIBUTE_DEFINITIONS
 )
-from ..repo import BugBountyProgramRepository
+from ..repo.repositories import BugBountyProgramRepository
 
 
 class NewBugBountyProgramUseCase(AbstractUseCase):
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: DynamoDBConfig) -> None:
         database = DynamoDB(
             config,
             PROGRAMMES_TABLE_KEY_SCHEMA,

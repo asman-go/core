@@ -1,4 +1,4 @@
-from src.domains.example.domain import Config
+from domains.example.domain.config import Config
 
 
 def test_config_init(monkeypatch):

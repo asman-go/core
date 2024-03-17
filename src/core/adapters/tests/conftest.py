@@ -1,8 +1,7 @@
-from moto import mock_dynamodb
 from pydantic_settings import BaseSettings
 import pytest
 
-from src.core.adapters.db import DynamoDB
+from core.adapters.db import DynamoDB
 
 
 class Config(BaseSettings):
@@ -64,12 +63,15 @@ def dynamodb_attribute_definitions():
 
 
 @pytest.fixture()
-def dynamodb(dynamodb_config, dynamodb_key_schema, dynamodb_attribute_definitions):
-    with mock_dynamodb():
-        db = DynamoDB(
+def dynamodb(
             dynamodb_config,
             dynamodb_key_schema,
-            dynamodb_attribute_definitions,
-        )
+            dynamodb_attribute_definitions
+        ):
+    db = DynamoDB(
+        dynamodb_config,
+        dynamodb_key_schema,
+        dynamodb_attribute_definitions,
+    )
 
-        return db
+    return db

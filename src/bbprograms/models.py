@@ -1,13 +1,18 @@
 # DynamoDB Schema
 
-PROGRAMMES_TABLE_NAME = 'bbprogrammes'      # Таблица, в которой храним BB программы
-PROGRAMMES_TABLE_KEY_SCHEMA = [             # Схема ключей таблицы PROGRAMMES_TABLE_NAME
+# Таблица, в которой храним BB программы
+PROGRAMMES_TABLE_NAME = 'bbprogrammes'
+
+# Схема ключей таблицы PROGRAMMES_TABLE_NAME
+PROGRAMMES_TABLE_KEY_SCHEMA = [
     {
         'AttributeName': 'program_site',
         'KeyType': 'HASH'
     }
 ]
-PROGRAMMES_TABLE_ATTRIBUTE_DEFINITIONS = [  # Схема столбцов таблицы PROGRAMMES_TABLE_NAME
+
+# Схема столбцов таблицы PROGRAMMES_TABLE_NAME
+PROGRAMMES_TABLE_ATTRIBUTE_DEFINITIONS = [
     {
         'AttributeName': 'program_name',
         'AttributeType': 'S'

@@ -1,7 +1,7 @@
 import pytest
 
 
-from src.bbprograms.domain import (
+from bbprograms import (
     AssetEntity,
     BugBountyProgramEntity,
 
@@ -48,7 +48,7 @@ def test_bbprogram_create():
 
 def test_bbprogram_create_throws_invalid_platform_exception():
     with pytest.raises(InvalidPlatformException) as exc:
-        program = BugBountyProgramEntity(
+        BugBountyProgramEntity(
             program_name='Test',
             program_site='https://example.com',
             platform='TOTALLY_NOT_A_PLATFORM',

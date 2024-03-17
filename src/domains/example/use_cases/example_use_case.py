@@ -1,9 +1,9 @@
-from src.core.arch import AbstractUseCase
-from src.core.adapters.db import DynamoDB, DynamoDBConfig
+from core.arch import AbstractUseCase
+from core.adapters.db import DynamoDB, DynamoDBConfig
 
-from ..domain import Config
-from ..repo import ExampleRepository
-from ..domain import (
+from ..domain.config import Config
+from ..repo.example_repository import ExampleRepository
+from ..domain.dynamodb_schema import (
     DYNAMODB_TABLE_NAME,
     DYNAMODB_KEY_SCHEMA,
     DYNAMODB_ATTRIBUTE_DEFINITIONS,

@@ -1,29 +1,42 @@
-from pathlib import Path
 from setuptools import setup, find_packages
 
-about = {}
-here = Path.absolute(Path(__file__).parent)
-with here.joinpath('src', '__init__.py').open(mode='r') as input_stream:
-    exec(input_stream.read(), about)
+
+__title__ = 'asman'
+__description__ = 'The package with core functionality for Asman'
+__url__ = 'https://github.com/asman-go/core'
+__version__ = '0.0.1'
+__author__ = 'Petrakov Oleg'
+__author_email__ = 'murami.ike@gmail.com'
+__license__ = 'MIT'
+
+print('setup',find_packages(where="src"))
 
 setup(
-    name=about['__title__'],
-    version=about['__version__'],
+    name=__title__,
+    version=__version__,
 
-    url=about['__url__'],
-    author=about['__author__'],
-    author_email=about['__author_email__'],
+    url=__url__,
+    author=__author__,
+    author_email=__author_email__,
 
-    packages=[
-        "bbprograms",
-        "core"
-    ],
+    packages=find_packages(where="src"),
     package_dir={"": "src"},
-    python_requires=">=3.7",
+    python_requires=">=3.10",
     install_requires=[
-        "boto3",
-        "pydantic"
+        'boto3',
+        'pydantic',
+        'pydantic_settings',
+        'grpcio',
+        'grpcio-tools',
+        'setuptools',
+        'mock',
+        'moto[all]',
+        'pytest'
     ],
-    license=about['__license__'],
-    description=about['__description__']
+    # extras_require={
+    #     'dev': ['check-manifest'],
+    #     'test': ['coverage']
+    # },
+    license=__license__,
+    description=__description__
 )
