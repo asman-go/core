@@ -1,5 +1,0 @@
-boto3
-grpcio
-grpcio-tools
-pydantic
-pydantic_settings

@@ -1,6 +1,16 @@
+# ------------
+# - My Rules -
+# ------------
+
+old
+
 # gRPC code
 *_pb2.py
 *_pb2.pyi
+
+# ---------
+# - BASIC -
+# ---------
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

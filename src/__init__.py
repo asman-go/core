@@ -1,7 +1,0 @@
-__title__ = 'asman-core'
-__description__ = 'The package with core functionality for Asman'
-__url__ = 'https://github.com/asman-go/core'
-__version__ = '0.0.1'
-__author__ = 'Petrakov Oleg'
-__author_email__ = 'murami.ike@gmail.com'
-__license__ = 'MIT'

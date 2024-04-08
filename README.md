@@ -19,3 +19,5 @@ python -m pip install .
 Links:
 
 - https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html#summary
+- За основу конфигов брал https://github.com/getmoto/moto
+- Про pyproject.toml: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/

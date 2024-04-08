@@ -1,9 +1,5 @@
-
-# gRPC
+boto3
+grpcio
 grpcio-tools
-
-# Dev dependencies
-setuptools
-
-# linters
-flake8
+pydantic
+pydantic_settings

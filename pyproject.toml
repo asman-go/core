@@ -1,3 +1,81 @@
 [build-system]
-requires = ["setuptools >= 40.6.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-requirements-txt", "hatch-build-scripts"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asman"
+version = "0.0.1"
+authors = [
+    { name="Petrakov Oleg", email="murami.ike@gmail.com" },
+]
+description = "The package with core functionality for Asman"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+# use plugin: https://github.com/repo-helper/hatch-requirements-txt
+dynamic = ["dependencies", "optional-dependencies"]
+
+[project.urls]
+"Source code" = "https://github.com/asman-go/core"
+Issues = "https://github.com/asman-go/core/issues"
+
+# dependencies
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+# optional-dependencies
+[tool.hatch.metadata.hooks.requirements_txt.optional-dependencies]
+example = ["src/domains/example/requirements.txt"]
+# all = ["requirements-all.txt"]
+
+# Кодогенерация -> мы можем запустить любую программу: https://github.com/rmorshea/hatch-build-scripts
+[[tool.hatch.build.hooks.build-scripts.scripts]]
+# out_dir = "."
+# work_dir = "."
+commands = [
+    'python tools/generate.py > test.txt',
+]
+artifacts = [
+]
+# clean_artifacts = true
+# clean_out_dir = false
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/*",
+    "tools/*",
+]
+exclude = [
+    "example/*",
+]
+
+[tool.hatch.build.targets.wheel]
+only-include = [
+    "src/core",
+
+    "src/domains/example",
+]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/core" = "asman/core"
+"src/domains/example" = "asman/domains/example"
+
+# Environments
+# [tool.hatch.envs.default]
+[tool.hatch.envs.example]
+features = [
+    # Берем зависимости из example
+    "example"
+]
+
+[tool.hatch.envs.test]
+dependencies = []
