@@ -3,6 +3,7 @@ import subprocess
 
 
 def generate():
+    print('Code generate start')
     src = Path('src')
 
     """
@@ -12,6 +13,7 @@ def generate():
     """
     proto_files = set(map(lambda path: Path(path).parent, src.glob('**/*.proto')))
     for path in proto_files:
+        print(path)
         result = subprocess.run([
             'python',
             '-m',
@@ -20,8 +22,12 @@ def generate():
             path,
             f'--python_out={path}',
             f'--pyi_out={path}',
-            f'schema.proto',
-        ])
+            'schema.proto',
+        ],
+        capture_output = True)
+        print(result.stdout, result.stderr)
+
+    print('Code generate end')
 
 
 if __name__ == '__main__':

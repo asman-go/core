@@ -1,5 +1,6 @@
 boto3
 grpcio
 grpcio-tools
+mock
 pydantic
 pydantic_settings
