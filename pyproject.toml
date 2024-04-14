@@ -34,7 +34,12 @@ files = ["requirements.txt"]
 
 # optional-dependencies
 [tool.hatch.metadata.hooks.requirements_txt.optional-dependencies]
-example = ["src/domains/example/requirements.txt"]
+example = [
+    "src/domains/example/requirements.txt",
+]
+bugbounty_programs = [
+    "src/domains/bugbounty_programs/requirements.txt",
+]
 # all = ["requirements-all.txt"]
 
 # Кодогенерация -> мы можем запустить любую программу: https://github.com/rmorshea/hatch-build-scripts
@@ -67,11 +72,13 @@ ignore-vcs = true
 only-include = [
     "src/core",
 
+    "src/domains/bugbounty_programs",
     "src/domains/example",
 ]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/core" = "asman/core"
+"src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"
 "src/domains/example" = "asman/domains/example"
 
 # Environments
