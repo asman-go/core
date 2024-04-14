@@ -1,4 +1,5 @@
 from .conftest_postgres import (
+    db_in_memory,
     postgres,
     postgres_config,
 )

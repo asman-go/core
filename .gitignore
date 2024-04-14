@@ -3,6 +3,7 @@
 # ------------
 
 old
+.DS_Store
 
 # gRPC code
 *_pb2.py

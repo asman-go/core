@@ -32,24 +32,25 @@ class Postgres(Database):
     logger: logging.Logger
 
     def __init__(self, config: PostgresConfig) -> None:
-        self.logger = logging.getLogger(f'postgres_{config.POSTGRES_DB}')
-        database_url = f'postgresql+psycopg2://{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB}'
-        self.database = databases.Database(database_url)
-        self._engine = sqlalchemy.create_engine(database_url)
 
-    async def connect(self):
-        await self.database.connect()
-        self.logger.debug(f'Connect to database')
+        if config:
+            database_url = ''.join([
+                'postgresql+psycopg2://',
+                f'{config.POSTGRES_USER}:{config.POSTGRES_PASSWORD}',
+                '@',
+                f'{config.POSTGRES_HOST}:{config.POSTGRES_PORT}',
+                '/',
+                config.POSTGRES_DB
+            ])
+            self.logger = logging.getLogger(f'postgres_{config.POSTGRES_DB}')
+        else:
+            database_url = 'sqlite:///:memory:'
+            self.logger = logging.getLogger('sqlite_inmemory')
 
-    async def disconnect(self):
-        await self.database.disconnect()
-        self.logger.debug(f'Disconnect from database')
-
-    async def execute(self, query: ClauseElement):
-        return await self.database.execute(query)
-
-    async def fetch_one(self, query: ClauseElement):
-        return await self.database.fetch_one(query)
+        # self.database = databases.Database(database_url)
+        self.engine = sqlalchemy.create_engine(database_url)
+        # Создаем все таблицы
+        TableBase.metadata.create_all(self.engine)
 
     def upsert(self, table_name: str, data: pydantic.BaseModel):
         raise NotImplementedException

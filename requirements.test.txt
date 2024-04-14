@@ -2,3 +2,4 @@
 mock
 moto[all]
 pytest
+pytest-asyncio
