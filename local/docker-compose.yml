@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: my_db
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_password
+    volumes:
+      - ./postgres_init:/docker-entrypoint-initdb.d
+      - ./postgres_data:/var/lib/postgresql/data
