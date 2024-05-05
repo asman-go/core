@@ -13,7 +13,10 @@ from asman.domains.bugbounty_programs.domain import (
 )
 
 from asman.domains.bugbounty_programs.api import (
-    CreateProgramRequest,
+    # CreateProgramRequest,
+    Program,
+    ProgramData,
+    ProgramId,
 )
 
 
@@ -21,7 +24,7 @@ class ProgramRepository(AbstractRepository):
     def __init__(self, database: Postgres) -> None:
         self.database = database
 
-    async def insert(self, entity: CreateProgramRequest) -> int | None:
+    async def insert(self, entity: ProgramData) -> int | None:
         # Use a transaction
         with Session(self.database.engine) as session:
             NEW_PROGRAM = TableProgram(
@@ -58,14 +61,73 @@ class ProgramRepository(AbstractRepository):
 
             return NEW_PROGRAM.id
 
-    def update(self, entity: Entity) -> Entity:
-        raise NotImplementedException
+    async def update(self, entity: Program) -> Program:
+        """
+            ассеты нельзя обновить, можно добавить или удалить
+        """
+        with Session(self.database.engine) as session:
+            stmt = (
+                update(TableProgram)
+                .where(TableProgram.id == entity.id.id)
+                .values(
+                    program_name=entity.data.program_name,
+                    program_site=entity.data.program_site,
+                    platform=entity.data.platform,
+                    notes=entity.data.notes,
+                )
+            )
+            session.execute(stmt)
+            session.commit()
 
-    def get_by_id(self, entity_id) -> Entity | None:
-        raise NotImplementedException
+            updated_entity = (
+                session.query(TableProgram)
+                .filter_by(
+                    id=entity.id.id,
+                )
+                .first()
+            )
 
-    def list(self) -> Sequence[Entity] | None:
-        raise NotImplementedException
+            return TableProgram.convert(updated_entity)
 
-    def delete(self, entity_id):
-        raise NotImplementedException
+    async def get_by_id(self, entity_id: ProgramId) -> Program | None:
+        with Session(self.database.engine) as session:
+            # row = session.scalar(
+            #     select(TableProgram)
+            #     .where(TableProgram.id == entity_id.id)
+            # )
+            row = (
+                session.query(TableProgram)
+                .filter_by(id=entity_id.id)
+                .first()
+            )
+
+            return TableProgram.convert(row) if row else None
+
+    async def list(self) -> Sequence[Program] | None:
+        with Session(self.database.engine) as session:
+            rows = (
+                session.query(TableProgram)
+                .all()
+            )
+            return list(
+                map(
+                    lambda x: TableProgram.convert(x),
+                    rows
+                )
+            )
+
+    async def delete(self, programId: ProgramId):
+        with Session(self.database.engine) as session:
+            stmt = (
+                delete(TableAsset)
+                .where(TableAsset.program_id == programId.id)
+            )
+            session.execute(stmt)
+
+            stmt = (
+                delete(TableProgram)
+                .where(TableProgram.id == programId.id)
+            )
+            session.execute(stmt)
+
+            session.commit()
