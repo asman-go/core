@@ -6,7 +6,14 @@ Asman core python library
 Tests:
 
 ```
-tox run
+python -m pytest .
+```
+
+Для тестов нужна постгря локальная:
+
+```
+docker compose -f local/docker-compose.yml build
+docker compose -f local/docker-compose.yml up
 ```
 
 Install:
@@ -15,6 +22,13 @@ Install:
 python generate.py
 python -m pip install .
 ```
+
+или одной командой переустановить локальный пакет:
+
+```
+python -m pip uninstall -y asman && python tools/generate.py && python -m pip install "."
+```
+
 
 Links:
 
