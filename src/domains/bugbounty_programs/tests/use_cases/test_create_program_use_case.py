@@ -1,14 +1,7 @@
 import pytest
 
-
+from asman.domains.bugbounty_programs.api import ProgramId
 from asman.domains.bugbounty_programs.use_cases import CreateProgramUseCase
-
-
-@pytest.fixture
-def create_program_use_case():
-    use_case = CreateProgramUseCase(None, None)
-
-    return use_case
 
 
 def test_create_program_use_case_instance_create():
@@ -19,22 +12,20 @@ def test_create_program_use_case_instance_create():
 
 
 @pytest.mark.asyncio
-async def test_create_program_use_case_execute(create_program_use_case: CreateProgramUseCase, create_program_request):
-    program_id = await create_program_use_case.execute(create_program_request)
+async def test_create_program_use_case_execute(create_program_use_case: CreateProgramUseCase, program_data):
+    program_id = await create_program_use_case.execute(program_data)
 
     assert program_id
-    assert isinstance(program_id, int)
+    assert isinstance(program_id, ProgramId)
 
 
 @pytest.mark.asyncio
-async def test_create_program_use_case_execute2(create_program_use_case: CreateProgramUseCase, create_program_request):
-    program_id1 = await create_program_use_case.execute(create_program_request)
-    program_id2 = await create_program_use_case.execute(create_program_request)
+async def test_create_program_use_case_execute2(create_program_use_case: CreateProgramUseCase, program_data):
+    program_id1 = await create_program_use_case.execute(program_data)
+    program_id2 = await create_program_use_case.execute(program_data)
 
     assert program_id1
     assert program_id2
-    assert isinstance(program_id1, int)
-    assert isinstance(program_id2, int)
+    assert isinstance(program_id1, ProgramId)
+    assert isinstance(program_id2, ProgramId)
     assert program_id1 != program_id2
-
-
