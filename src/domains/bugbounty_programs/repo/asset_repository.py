@@ -1,0 +1,98 @@
+from typing import Sequence
+
+from sqlalchemy import select, insert, update, delete, and_
+from sqlalchemy.orm import Session
+
+from asman.core.adapters.db import Database, Postgres
+from asman.core.arch import AbstractRepository, Entity
+from asman.core.exceptions import NotImplementedException
+
+from asman.domains.bugbounty_programs.domain import (
+    TableAsset,
+    TableProgram,
+)
+
+from asman.domains.bugbounty_programs.api import (
+    # CreateProgramRequest,
+    Asset,
+    Program,
+    ProgramData,
+    ProgramId,
+)
+
+
+class AssetRepository(AbstractRepository):
+    def __init__(self, database: Postgres) -> None:
+        self.database = database
+
+    async def insert(self, programId: ProgramId, entities: Sequence[Asset]) -> None:
+        with Session(self.database.engine) as session:
+            program = (
+                session.query(TableProgram)
+                .filter_by(
+                    id=programId.id,
+                )
+                .first()
+            )
+            assets = list(
+                map(
+                    lambda asset: TableAsset(
+                        program=program,
+
+                        value=asset.value,
+                        type=asset.type,
+                        in_scope=asset.in_scope,
+                        is_paid=asset.is_paid,
+                    ),
+                    entities
+                )
+            )
+
+            session.add_all(assets)
+            session.commit()
+
+    async def update(self, entity: Entity) -> Entity:
+        """
+            ассеты нельзя обновить, можно добавить или удалить
+        """
+        raise NotImplementedException
+
+    async def get_by_id(self, entity_id) -> Entity | None:
+        raise NotImplementedException
+
+    async def list(self, programId: ProgramId) -> Sequence[Asset] | None:
+        with Session(self.database.engine) as session:
+            rows = (
+                session.query(TableAsset)
+                .filter_by(program_id=programId.id)
+                .all()
+            )
+            # rows = session.execute(
+            #     select(TableAsset)
+            #     .where(program_id=programId.id)
+            # )
+            return list(
+                map(
+                    lambda x: TableAsset.convert(x),
+                    rows
+                )
+            )
+
+    async def delete(self, programId: ProgramId, entities: Sequence[Asset]) -> None:
+        with Session(self.database.engine) as session:
+            stmt = (
+                delete(TableAsset)
+                .where(
+                    and_(
+                        TableAsset.program_id == programId.id,
+                        TableAsset.value.in_(
+                            list(map(
+                                lambda x: x.value,
+                                entities
+                            ))
+                        ),
+                    )
+                )
+            )
+            session.execute(stmt)
+            session.commit()
