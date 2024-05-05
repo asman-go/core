@@ -1,6 +1,0 @@
-class InvalidPlatformException(Exception):
-    ...
-
-
-class InvalidAssetTypeException(Exception):
-    ...
