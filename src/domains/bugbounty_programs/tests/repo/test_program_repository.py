@@ -9,7 +9,7 @@ from asman.domains.bugbounty_programs.api import (
 def test_program_repository_instance_create(db_in_memory):
     repo = ProgramRepository(db_in_memory)
 
-    assert repo
+    assert repo, 'No repo in ProgramRepository'
 
 
 @pytest.mark.asyncio
@@ -17,9 +17,9 @@ async def test_program_repository_insert(program_repository, program_data):
     program_id = await program_repository.insert(program_data)
     program = await program_repository.get_by_id(ProgramId(id=program_id))
 
-    assert program_id
-    assert program
-    assert isinstance(program_id, int)
+    assert program_id, 'No id program after data insert'
+    assert program, 'Inserted program not found'
+    assert isinstance(program_id, int), 'Wrong id program type'
 
 
 @pytest.mark.asyncio
@@ -30,8 +30,8 @@ async def test_program_repository_update(program_repository, program_data):
     program.data.notes += 'UPDATED'
     updated_program = await program_repository.update(program)
 
-    assert updated_program
-    assert updated_program.id.id == program_id
+    assert updated_program, 'Updated program not found'
+    assert updated_program.id.id == program_id, 'Inserted and updated programs\' ids are not same'
     assert updated_program.data.notes == OLD_VALUE + 'UPDATED'
 
 
@@ -40,9 +40,9 @@ async def test_program_repository_get_by_id(program_repository, program_data):
     program_id = await program_repository.insert(program_data)
     program = await program_repository.get_by_id(ProgramId(id=program_id))
 
-    assert program
-    assert program.id.id == program_id
-    assert program.data.program_name == program_data.program_name
+    assert program, 'Program not found'
+    assert program.id.id == program_id, 'Wrong program id'
+    assert program.data.program_name == program_data.program_name, 'Wrong program name'
 
 
 @pytest.mark.asyncio
@@ -50,9 +50,9 @@ async def test_program_repository_list(program_repository, program_data):
     program_id = await program_repository.insert(program_data)
     programs = await program_repository.list()
 
-    assert programs
-    assert isinstance(programs, list)
-    assert len(programs) > 0
+    assert programs, 'Programs not found'
+    assert isinstance(programs, list), 'Wrong programs type'
+    assert len(programs) > 0, 'Wrong programs amount'
 
 
 @pytest.mark.asyncio

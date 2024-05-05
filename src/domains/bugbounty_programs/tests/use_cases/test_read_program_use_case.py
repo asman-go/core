@@ -10,11 +10,11 @@ def test_read_program_use_case_instance_create():
     read_use_case = ReadProgramUseCase(None, None)
     read_by_id_use_case = ReadProgramByIdUseCase(None, None)
 
-    assert read_use_case
-    assert read_use_case.repo
+    assert read_use_case, 'Use case is not created'
+    assert read_use_case.repo, 'Repo property not found'
 
-    assert read_by_id_use_case
-    assert read_by_id_use_case.repo
+    assert read_by_id_use_case, 'Use case is not created'
+    assert read_by_id_use_case.repo, 'Repo property not found'
 
 
 @pytest.mark.asyncio

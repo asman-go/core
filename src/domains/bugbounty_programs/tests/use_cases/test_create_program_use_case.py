@@ -7,8 +7,8 @@ from asman.domains.bugbounty_programs.use_cases import CreateProgramUseCase
 def test_create_program_use_case_instance_create():
     use_case = CreateProgramUseCase(None, None)
 
-    assert use_case
-    assert use_case.repo
+    assert use_case, 'Use case is not created'
+    assert use_case.repo, 'Repo property not found'
 
 
 @pytest.mark.asyncio

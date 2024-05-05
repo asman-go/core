@@ -6,8 +6,8 @@ from asman.domains.bugbounty_programs.use_cases import DeleteProgramUseCase
 def test_delete_program_use_case_create():
     delete_use_case = DeleteProgramUseCase(None, None)
 
-    assert delete_use_case
-    assert delete_use_case.repo
+    assert delete_use_case, 'Use case is not created'
+    assert delete_use_case.repo, 'Repo property not found'
 
 
 @pytest.mark.asyncio
