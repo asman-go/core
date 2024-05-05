@@ -10,8 +10,8 @@ from asman.core.adapters.db import Postgres, PostgresConfig
 @pytest.fixture()
 def postgres_config(monkeypatch) -> PostgresConfig:
     monkeypatch.setenv('POSTGRES_DB', 'my_db')
-    monkeypatch.setenv('POSTGRES_USER', 'user')
-    monkeypatch.setenv('POSTGRES_PASSWORD', 'password')
+    monkeypatch.setenv('POSTGRES_USER', 'my_user')
+    monkeypatch.setenv('POSTGRES_PASSWORD', 'my_password')
     monkeypatch.setenv('POSTGRES_HOST', 'localhost')
     monkeypatch.setenv('POSTGRES_PORT', '5432')
 
