@@ -3,6 +3,12 @@ from sqlalchemy.orm import relationship
 
 from asman.core.adapters.db import TableBase
 
+from asman.domains.bugbounty_programs.api import (
+    Asset,
+    Program,
+    ProgramData,
+    ProgramId,
+)
 
 TABLE_ASSET_NAME = 'assets'
 TABLE_BUGBOUNTY_PROGRAM_NAME = 'programs'
@@ -22,6 +28,28 @@ class TableProgram(TableBase):
         back_populates="program",  # program — field in TableAsset
     )
 
+    @staticmethod
+    def convert(item: 'TableProgram') -> Program:
+        assets = list(
+            map(
+                lambda asset: TableAsset.convert(asset),
+                item.assets
+            )
+        )
+
+        return Program(
+            id=ProgramId(
+                id=item.id
+            ),
+            data=ProgramData(
+                program_name=item.program_name,
+                program_site=item.program_site,
+                platform=item.platform,
+                assets=assets,
+                notes=item.notes,
+            ),
+        )
+
 
 class TableAsset(TableBase):
     __tablename__ = TABLE_ASSET_NAME
@@ -39,3 +67,12 @@ class TableAsset(TableBase):
         TableProgram,
         back_populates="assets",
     )
+
+    @staticmethod
+    def convert(item: 'TableAsset') -> Asset:
+        return Asset(
+            value=item.value,
+            type=item.type,
+            in_scope=item.in_scope,
+            is_paid=item.is_paid,
+        )
