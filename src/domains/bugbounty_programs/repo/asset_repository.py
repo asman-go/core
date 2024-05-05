@@ -40,7 +40,7 @@ class AssetRepository(AbstractRepository):
                         program=program,
 
                         value=asset.value,
-                        type=asset.type,
+                        type=asset.type.value,
                         in_scope=asset.in_scope,
                         is_paid=asset.is_paid,
                     ),

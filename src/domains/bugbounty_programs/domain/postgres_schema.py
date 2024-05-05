@@ -5,6 +5,7 @@ from asman.core.adapters.db import TableBase
 
 from asman.domains.bugbounty_programs.api import (
     Asset,
+    AssetType,
     Program,
     ProgramData,
     ProgramId,
@@ -72,7 +73,7 @@ class TableAsset(TableBase):
     def convert(item: 'TableAsset') -> Asset:
         return Asset(
             value=item.value,
-            type=item.type,
+            type=AssetType(item.type),
             in_scope=item.in_scope,
             is_paid=item.is_paid,
         )

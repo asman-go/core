@@ -41,7 +41,7 @@ class ProgramRepository(AbstractRepository):
                         program=NEW_PROGRAM,
 
                         value=asset.value,
-                        type=asset.type,
+                        type=asset.type.value,
                         in_scope=asset.in_scope,
                         is_paid=asset.is_paid,
                     ),
