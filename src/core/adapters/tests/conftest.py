@@ -10,3 +10,10 @@ from .conftest_dynamodb import (
     dynamodb_key_schema,
     dynamodb_attribute_definitions,
 )
+from .conftest_facebook import (
+    facebook_config,
+    facebook_graph,
+
+    certificate_info,
+    facebook_certificate_response,
+)

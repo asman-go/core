@@ -3,3 +3,4 @@ mock
 moto[all]
 pytest
 pytest-asyncio
+pytest-mock

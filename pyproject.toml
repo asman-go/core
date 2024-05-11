@@ -40,6 +40,9 @@ example = [
 bugbounty_programs = [
     "src/domains/bugbounty_programs/requirements.txt",
 ]
+facebook_api = [
+    "src/domains/facebook_api/requirements.txt",
+]
 # all = ["requirements-all.txt"]
 
 # Кодогенерация -> мы можем запустить любую программу: https://github.com/rmorshea/hatch-build-scripts
@@ -74,12 +77,14 @@ only-include = [
 
     "src/domains/bugbounty_programs",
     "src/domains/example",
+    "src/domains/facebook_api",
 ]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/core" = "asman/core"
 "src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"
 "src/domains/example" = "asman/domains/example"
+"src/domains/facebook_api" = "asman/domains/facebook_api"
 
 # Environments
 # [tool.hatch.envs.default]
