@@ -4,6 +4,7 @@ from .entity import (
     RequestEntity,
 )
 from .repository import AbstractRepository
+from .task import AbstractTask
 from .use_case import AbstractUseCase
 
 
@@ -13,6 +14,8 @@ __all__ = [
     RequestEntity,
 
     AbstractRepository,
+
+    AbstractTask,
 
     AbstractUseCase,
 ]

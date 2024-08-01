@@ -5,9 +5,13 @@ grpcio-tools
 mock
 pydantic
 pydantic_settings
+pypubsub
 
 # Postgres support
 databases
 asyncpg
 psycopg2-binary
 sqlalchemy[postgresql-psycopg2binary]
+
+# Recon
+dnspython

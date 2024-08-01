@@ -75,6 +75,8 @@ ignore-vcs = true
 only-include = [
     "src/core",
 
+    "src/tasks",
+
     "src/domains/bugbounty_programs",
     "src/domains/example",
     "src/domains/facebook_api",
@@ -82,6 +84,7 @@ only-include = [
 
 [tool.hatch.build.targets.wheel.sources]
 "src/core" = "asman/core"
+"src/tasks" = "asman/tasks"
 "src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"
 "src/domains/example" = "asman/domains/example"
 "src/domains/facebook_api" = "asman/domains/facebook_api"
