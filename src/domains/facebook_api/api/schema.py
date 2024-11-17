@@ -1,19 +1,22 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field
 from pydantic import (
     PositiveInt,
     StrictStr,
 )
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Mapping
 
 from .exceptions import WrongEventTypeException
 from .pem import get_domains_from_certificate
 
 
+FACEBOOK_EVENT = 'certificate_transparency'
+
+
 class NewCertificateEvent(BaseModel):
     id: StrictStr
-    changed_fields: List[StrictStr]
-    changes: Dict[str, List[str]]
+    changed_fields: List[StrictStr] = Field(default_factory=lambda: list())
+    changes: Dict[str, Mapping] = Field(default_factory=lambda: dict())  # Dict[str, List[str]]
     time: PositiveInt
 
     @field_validator('changed_fields')
@@ -28,7 +31,7 @@ class NewCertificateEvent(BaseModel):
 
     @field_validator('changes')
     def changes_validator(cls, value):
-        print('changes_validator', value)
+        # print('changes_validator', value)
         d = dict()
         if 'value' in value and 'certificate_pem' in value['value']:
             parent_domain, domains = get_domains_from_certificate(
@@ -49,7 +52,6 @@ class FacebookCtEvent(BaseModel):
 
     @field_validator('object')
     def object_validator(cls, value):
-        FACEBOOK_EVENT = 'certificate_transparency'
         if value != FACEBOOK_EVENT:
             raise WrongEventTypeException
 

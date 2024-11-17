@@ -12,7 +12,6 @@ def get_domains_from_certificate(pem_data: str) -> typing.Tuple[str, typing.List
     parent_domain = cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)[0].value      # Subject <Name(CN=core.zuberipay.com)>
     return parent_domain, dns_names
 
-    
 
 """
 data = '-----BEGIN CERTIFICATE-----\nMIIH...3yz\n-----END CERTIFICATE-----\n'

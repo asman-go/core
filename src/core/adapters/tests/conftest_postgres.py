@@ -13,7 +13,7 @@ def postgres_config(monkeypatch) -> PostgresConfig:
     monkeypatch.setenv('POSTGRES_USER', 'my_user')
     monkeypatch.setenv('POSTGRES_PASSWORD', 'my_password')
     monkeypatch.setenv('POSTGRES_HOST', 'localhost')
-    monkeypatch.setenv('POSTGRES_PORT', '5432')
+    monkeypatch.setenv('POSTGRES_PORT', '6432')
 
     return PostgresConfig()
 
