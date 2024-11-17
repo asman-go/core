@@ -17,14 +17,17 @@ from asman.core.adapters.clients.facebook import (
 def test_facebook_config_create(monkeypatch):
     FACEBOOK_CLIENT_ID = 'test_client_id'
     FACEBOOK_CLIENT_SECRET = 'test_client_secret'
+    FACEBOOK_WEBHOOK_VERIFICATION_TOKEN = 'verification-token'
     monkeypatch.setenv('FACEBOOK_CLIENT_ID', FACEBOOK_CLIENT_ID)
     monkeypatch.setenv('FACEBOOK_CLIENT_SECRET', FACEBOOK_CLIENT_SECRET)
+    monkeypatch.setenv('FACEBOOK_WEBHOOK_VERIFICATION_TOKEN', FACEBOOK_WEBHOOK_VERIFICATION_TOKEN)
 
     config = FacebookConfig()
 
     assert config
     assert config.FACEBOOK_CLIENT_ID == FACEBOOK_CLIENT_ID
     assert config.FACEBOOK_CLIENT_SECRET == FACEBOOK_CLIENT_SECRET
+    assert config.FACEBOOK_WEBHOOK_VERIFICATION_TOKEN == FACEBOOK_WEBHOOK_VERIFICATION_TOKEN
 
 
 def test_facebook_certificate_response_create():
@@ -88,7 +91,7 @@ async def test_facebook_graph_get_certificates(
 
 @pytest.mark.asyncio
 async def test_facebook_graph_subscribe():
-    # TBD
+    # TODO: TBD
     ...
 
 
