@@ -24,6 +24,6 @@ class NewCtEventUseCase(AbstractUseCase):
                 request.entry
             )
         )
-        self.repo.insert(data)
+        await self.repo.insert(data)
 
         return True

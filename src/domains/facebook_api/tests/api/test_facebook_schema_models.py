@@ -9,20 +9,6 @@ from asman.domains.facebook_api.api.schema import (
 )
 
 
-@pytest.fixture
-def new_certificate_event_json(certificate_pem):
-    return {
-        'id': 'test',
-        'changed_fields': [],
-        'changes': {
-            'value': {
-                'certificate_pem': certificate_pem,
-            }
-        },
-        'time': 123124,
-    }
-
-
 def test_new_certificate_event_entity_create(new_certificate_event_json):
     entity = pydantic.TypeAdapter(
         NewCertificateEvent

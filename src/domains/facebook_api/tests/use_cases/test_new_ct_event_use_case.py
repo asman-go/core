@@ -7,6 +7,7 @@ from asman.domains.facebook_api.use_cases import (
 from asman.domains.facebook_api.api import (
     FacebookCtEvent,
     NewCertificateEvent,
+    FACEBOOK_EVENT,
 )
 
 
@@ -17,32 +18,18 @@ def test_new_ct_event_use_case_create():
     assert use_case.repo, 'Repo property not found'
 
 
-@pytest.fixture
-def certificate_event(certificate_pem):
-    return NewCertificateEvent(**{
-        'id': 'test',
-        'changed_fields': [],
-        'changes': {
-            'value': {
-                'certificate_pem': certificate_pem
-            }
-        },
-        'time': 123124,
-    })
-
-
 @pytest.mark.asyncio
 async def test_new_ct_event_use_case_execute(
             new_ct_event_use_case: NewCtEventUseCase,
-            certificate_event: NewCertificateEvent,
+            new_certificate_event: NewCertificateEvent,
         ):
-    # TODO: make good tests
 
     event = FacebookCtEvent(
-        object='certificate_transparency',
+        object=FACEBOOK_EVENT,
         entry=[
-            certificate_event,
+            new_certificate_event,
         ]
     )
-    # await new_ct_event_use_case.execute(event)
-    ...
+    status = await new_ct_event_use_case.execute(event)
+
+    assert status

@@ -6,6 +6,9 @@ from asman.domains.facebook_api.use_cases import (
 )
 
 
+# TODO: подумать, как написать тест для Facebook API
+
+
 def test_subscribe_new_domains_use_case_create(facebook_config):
     use_case = SubscribeNewDomainsUseCase(facebook_config, None)
 
