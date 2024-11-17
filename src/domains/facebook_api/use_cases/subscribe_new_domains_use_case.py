@@ -18,6 +18,7 @@ class SubscribeNewDomainsUseCase(AbstractUseCase):
         self.repo = DomainRepository(database)
 
     async def execute(self, domains: List[str]) -> List[str]:
+        # TODO: записывать в бд статус домена — мы подписались
         result: Dict[str, List[str]] = dict()
 
         # 1. Get information from Facebook Graph API

@@ -7,6 +7,7 @@ from asman.domains.facebook_api.repo import DomainRepository
 from asman.domains.facebook_api.use_cases import (
     NewCtEventUseCase,
     SubscribeNewDomainsUseCase,
+    UnsubscribeDomainsUseCase,
 )
 
 
@@ -53,3 +54,8 @@ def new_ct_event_use_case(postgres_config):
 @pytest.fixture
 def subscribe_new_domains_use_case(facebook_config, postgres_config):
     return SubscribeNewDomainsUseCase(facebook_config, postgres_config)
+
+
+@pytest.fixture
+def unsubscribe_domains_use_case(facebook_config, postgres_config):
+    return UnsubscribeDomainsUseCase(facebook_config, postgres_config)
