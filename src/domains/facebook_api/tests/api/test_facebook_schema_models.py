@@ -19,9 +19,8 @@ def test_new_certificate_event_entity_create(new_certificate_event_json):
     assert entity
     assert entity.id == new_certificate_event_json['id']
     assert entity.time == new_certificate_event_json['time']
-    assert entity.changed_fields == new_certificate_event_json['changed_fields']
-    assert '*.example.company' in entity.changes
-    assert entity.changes['*.example.company'] == ['example.com', 'www.example.com', 'mail.example.com', 'ftp.example.com']
+    assert '*.example.company' in entity.changes[0].value
+    assert entity.changes[0].value['*.example.company'] == ['example.com', 'www.example.com', 'mail.example.com', 'ftp.example.com']
 
 
 def test_facebook_ct_event_entity_create(new_certificate_event_json):

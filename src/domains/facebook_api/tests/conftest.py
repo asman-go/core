@@ -21,14 +21,15 @@ def certificate_pem():
 @pytest.fixture
 def new_certificate_event_json(certificate_pem):
     return {
-        'id': 'test',
-        'changed_fields': [],
-        'changes': {
+        'id': '0',
+        # 'changed_fields': [],
+        'changes': [{
+            'field': 'certificate',
             'value': {
                 'certificate_pem': certificate_pem,
             }
-        },
-        'time': 123124,
+        }],
+        'time': 1733148736,
     }
 
 

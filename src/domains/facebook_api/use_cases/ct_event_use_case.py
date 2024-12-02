@@ -17,11 +17,15 @@ class NewCtEventUseCase(AbstractUseCase):
         self.repo = DomainRepository(database)
 
     async def execute(self, request: FacebookCtEvent) -> bool:
+        changes = list()
+        for entry in request.entry:
+            changes.extend(entry.changes)
+
         data = reduce(
             join,
             map(
-                lambda entry: entry.changes,
-                request.entry
+                lambda change: change.value,
+                changes
             )
         )
         await self.repo.insert(data)
