@@ -17,6 +17,7 @@ def facebook_config(monkeypatch) -> FacebookConfig:
     monkeypatch.setenv('FACEBOOK_CLIENT_ID', 'test_client_id')
     monkeypatch.setenv('FACEBOOK_CLIENT_SECRET', 'test_client_secret')
     monkeypatch.setenv('FACEBOOK_WEBHOOK_VERIFICATION_TOKEN', 'test_webhook_verification_token')
+    monkeypatch.setenv('PROXY_URL', '')
 
     return FacebookConfig()
 

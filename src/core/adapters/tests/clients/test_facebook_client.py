@@ -21,6 +21,7 @@ def test_facebook_config_create(monkeypatch):
     monkeypatch.setenv('FACEBOOK_CLIENT_ID', FACEBOOK_CLIENT_ID)
     monkeypatch.setenv('FACEBOOK_CLIENT_SECRET', FACEBOOK_CLIENT_SECRET)
     monkeypatch.setenv('FACEBOOK_WEBHOOK_VERIFICATION_TOKEN', FACEBOOK_WEBHOOK_VERIFICATION_TOKEN)
+    monkeypatch.setenv('PROXY_URL', '')
 
     config = FacebookConfig()
 
@@ -28,6 +29,7 @@ def test_facebook_config_create(monkeypatch):
     assert config.FACEBOOK_CLIENT_ID == FACEBOOK_CLIENT_ID
     assert config.FACEBOOK_CLIENT_SECRET == FACEBOOK_CLIENT_SECRET
     assert config.FACEBOOK_WEBHOOK_VERIFICATION_TOKEN == FACEBOOK_WEBHOOK_VERIFICATION_TOKEN
+    assert config.PROXY_URL == ''
 
 
 def test_facebook_certificate_response_create():

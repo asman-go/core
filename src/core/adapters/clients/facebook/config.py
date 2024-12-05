@@ -8,3 +8,5 @@ class FacebookConfig(BaseSettings):
     FACEBOOK_CLIENT_ID: str = "UNDEFINED"
     FACEBOOK_CLIENT_SECRET: str = "UNDEFINED"
     FACEBOOK_WEBHOOK_VERIFICATION_TOKEN: typing.Optional[str] = Field(default='UNDEFINED')
+
+    PROXY_URL: typing.Optional[str] = Field(default=None)
