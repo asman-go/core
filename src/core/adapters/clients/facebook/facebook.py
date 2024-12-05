@@ -93,7 +93,7 @@ class FacebookGraph(object):
             else:
                 print(response)
                 return False
-    
+
     async def unsubscribe(self, domains: typing.List[str]):
         body = {
             'unsubscribe': ','.join(domains),
