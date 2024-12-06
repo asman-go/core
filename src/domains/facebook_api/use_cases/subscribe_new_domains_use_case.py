@@ -17,9 +17,9 @@ class SubscribeNewDomainsUseCase(AbstractUseCase):
         self.config = config
         self.repo = DomainRepository(database)
 
-    async def execute(self, domains: List[str]) -> List[str]:
+    async def execute(self, domains: List[str]) -> bool:
         # TODO: записывать в бд статус домена — мы подписались
-        result: Dict[str, List[str]] = dict()
+        # result: Dict[str, List[str]] = dict()
 
         # 1. Get information from Facebook Graph API
         async with FacebookGraph('https://graph.facebook.com', self.config) as fb_client:
@@ -35,9 +35,10 @@ class SubscribeNewDomainsUseCase(AbstractUseCase):
             # await asyncio.gather(*[get_certificates(domain) for domain in domains])
 
         # 2. If it is new domain we'll subscribe for updates
-            await fb_client.subscribe(domains)
+            return await fb_client.subscribe(domains)
+
+            return domains
 
         # 3. Save results
-        self.repo.insert(result)
-
-        return result.keys()
+        # await self.repo.insert(result)        
+        # return result.keys()
