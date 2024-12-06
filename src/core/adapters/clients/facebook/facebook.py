@@ -87,7 +87,7 @@ class FacebookGraph(object):
             'subscribe': ','.join(domains),
             'access_token': self._access_token
         }
-        async with self._session.post(self._URL_FB_GRAPH_API_SUBSCRIBED_DOMAINS, body=body, proxy=self._config.PROXY_URL) as response:
+        async with self._session.post(self._URL_FB_GRAPH_API_SUBSCRIBED_DOMAINS, data=body, proxy=self._config.PROXY_URL) as response:
             if response.ok:
                 return True
             else:
@@ -99,7 +99,7 @@ class FacebookGraph(object):
             'unsubscribe': ','.join(domains),
             'access_token': self._access_token
         }
-        async with self._session.post(self._URL_FB_GRAPH_API_SUBSCRIBED_DOMAINS, body=body, proxy=self._config.PROXY_URL) as response:
+        async with self._session.post(self._URL_FB_GRAPH_API_SUBSCRIBED_DOMAINS, data=body, proxy=self._config.PROXY_URL) as response:
             if response.ok:
                 return True
             else:
