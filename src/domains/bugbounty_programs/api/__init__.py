@@ -1,4 +1,3 @@
-# from .schema_pb2 import (
 from .schema import (
     Asset,
     AssetType,

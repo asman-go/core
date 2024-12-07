@@ -9,7 +9,7 @@ from ..domain.dynamodb_schema import (
     DYNAMODB_ATTRIBUTE_DEFINITIONS,
 )
 
-from ..api.schema_pb2 import Request
+from ..api.schema import Request
 
 
 class ExampleUseCase(AbstractUseCase):

@@ -8,7 +8,7 @@ from asman.core.adapters.db import Database, Postgres
 from asman.core.arch import AbstractRepository, Entity
 from asman.core.exceptions import NotImplementedException
 
-from asman.domains.facebook_api.domain import (
+from asman.domains.domains.domain import (
     TableDomain,
 )
 

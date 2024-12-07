@@ -4,10 +4,10 @@ from pydantic_settings import BaseSettings
 from asman.core.arch import AbstractUseCase
 from asman.core.adapters.db import Postgres, PostgresConfig
 
-from asman.domains.facebook_api.api import (
+from asman.domains.domains.api import (
     FacebookCtEvent,
 )
-from asman.domains.facebook_api.repo import DomainRepository
+from asman.domains.domains.repo import DomainRepository
 from .utils import join
 
 

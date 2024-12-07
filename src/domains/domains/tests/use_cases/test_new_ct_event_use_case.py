@@ -1,10 +1,10 @@
 import pytest
 
-from asman.domains.facebook_api.use_cases import (
+from asman.domains.domains.use_cases import (
     NewCtEventUseCase,
     SubscribeNewDomainsUseCase,
 )
-from asman.domains.facebook_api.api import (
+from asman.domains.domains.api import (
     FacebookCtEvent,
     NewCertificateEvent,
     FACEBOOK_EVENT,

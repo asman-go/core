@@ -4,7 +4,7 @@ from typing import List, Dict
 from asman.core.arch import AbstractUseCase
 from asman.core.adapters.db import Postgres, PostgresConfig
 
-from asman.domains.facebook_api.repo import DomainRepository
+from asman.domains.domains.repo import DomainRepository
 from asman.core.adapters.clients.facebook import (
     FacebookConfig,
     FacebookGraph,

@@ -2,9 +2,9 @@ import pytest
 import pydantic
 
 from asman.core.adapters.tests import db_in_memory, postgres, postgres_config, facebook_config
-from asman.domains.facebook_api.api import NewCertificateEvent
-from asman.domains.facebook_api.repo import DomainRepository
-from asman.domains.facebook_api.use_cases import (
+from asman.domains.domains.api import NewCertificateEvent
+from asman.domains.domains.repo import DomainRepository
+from asman.domains.domains.use_cases import (
     NewCtEventUseCase,
     SubscribeNewDomainsUseCase,
     UnsubscribeDomainsUseCase,

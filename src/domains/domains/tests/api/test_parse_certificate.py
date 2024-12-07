@@ -1,4 +1,4 @@
-from asman.domains.facebook_api.api import get_domains_from_certificate
+from asman.domains.domains.api import get_domains_from_certificate
 
 
 def test_get_domains_from_certificate(certificate_pem):

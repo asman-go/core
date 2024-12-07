@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from asman.domains.facebook_api.repo import DomainRepository
+from asman.domains.domains.repo import DomainRepository
 
 
 def test_domain_repository_instance_create(db_in_memory):

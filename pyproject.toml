@@ -40,8 +40,8 @@ example = [
 bugbounty_programs = [
     "src/domains/bugbounty_programs/requirements.txt",
 ]
-facebook_api = [
-    "src/domains/facebook_api/requirements.txt",
+domains = [
+    "src/domains/domains/requirements.txt",
 ]
 # all = ["requirements-all.txt"]
 
@@ -50,7 +50,7 @@ facebook_api = [
 # out_dir = "."
 # work_dir = "."
 commands = [
-    'python tools/generate.py',
+    # 'python tools/generate.py',
 ]
 artifacts = [
     # 'src/domains/example/api/schema_pb2.py'
@@ -79,7 +79,7 @@ only-include = [
 
     "src/domains/bugbounty_programs",
     "src/domains/example",
-    "src/domains/facebook_api",
+    "src/domains/domains",
 ]
 
 [tool.hatch.build.targets.wheel.sources]
@@ -87,7 +87,7 @@ only-include = [
 "src/tasks" = "asman/tasks"
 "src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"
 "src/domains/example" = "asman/domains/example"
-"src/domains/facebook_api" = "asman/domains/facebook_api"
+"src/domains/domains" = "asman/domains/domains"
 
 # Environments
 # [tool.hatch.envs.default]

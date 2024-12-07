@@ -1,4 +1,5 @@
 aiohttp
+aiohttp-retry
 boto3
 grpcio
 grpcio-tools

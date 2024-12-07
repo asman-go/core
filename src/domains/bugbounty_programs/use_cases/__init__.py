@@ -12,4 +12,5 @@ __all__ = [
     CreateProgramUseCase,
     ReadProgramUseCase,
     ReadProgramByIdUseCase,
+    UpdateProgramUseCase,
 ]
