@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import List
 from pydantic import BaseModel, Field
 from pydantic import (
@@ -8,7 +8,7 @@ from pydantic import (
 )
 
 
-class AssetType(Enum):
+class AssetType(IntEnum):
     ASSET_MOBILE = 0
     ASSET_WEB = 1
     ASSET_API = 2
