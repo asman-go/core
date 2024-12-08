@@ -8,7 +8,7 @@ from asman.domains.domains.api import (
     FacebookCtEvent,
 )
 from asman.domains.domains.repo import DomainRepository
-from .utils import join
+from asman.domains.domains.utils import join
 
 
 class NewCtEventUseCase(AbstractUseCase):

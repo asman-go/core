@@ -11,6 +11,8 @@ from asman.core.exceptions import NotImplementedException
 from asman.domains.domains.domain import (
     TableDomain,
 )
+from asman.domains.domains.utils import check_domain
+
 
 class DomainRepository(AbstractRepository):
     def __init__(self, database: Postgres) -> None:
@@ -21,19 +23,31 @@ class DomainRepository(AbstractRepository):
         with Session(self.database.engine) as session:
             domains = list()
             for parent_domain in entities:
-                domains.extend(
-                    map(
-                        lambda domain: {
-                            'domain': domain,
-                            'parent_domain': parent_domain,
-                        },
-                        # TableDomain(
-                        #     domain=domain,
-                        #     parent_domain=parent_domain
-                        # ),
-                        entities[parent_domain]
+                _parent_domain = parent_domain
+                if _parent_domain[:2] == '*.':
+                    _parent_domain = _parent_domain[2:]
+
+                if check_domain(_parent_domain):
+                    domains.extend(
+                        map(
+                            lambda domain: {
+                                'domain': domain,
+                                'parent_domain': _parent_domain,
+                            } if check_domain(domain) or check_domain(domain[2:]) else None,
+                            # TableDomain(
+                            #     domain=domain,
+                            #     parent_domain=parent_domain
+                            # ),
+                            entities[parent_domain]
+                        )
                     )
+            domains = list(
+                filter(
+                    lambda domain: domain is not None,
+                    domains
                 )
+            )
+
             stmt = (
                 postgres_insert(TableDomain)
                 .values(domains)
@@ -57,6 +71,7 @@ class DomainRepository(AbstractRepository):
                 .filter_by(parent_domain=parent_domain)
                 .all()
             )
+
             return list(
                 map(
                     lambda x: x.domain,
