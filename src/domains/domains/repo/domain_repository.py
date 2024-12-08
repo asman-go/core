@@ -23,30 +23,23 @@ class DomainRepository(AbstractRepository):
         with Session(self.database.engine) as session:
             domains = list()
             for parent_domain in entities:
-                _parent_domain = parent_domain
-                if _parent_domain[:2] == '*.':
-                    _parent_domain = _parent_domain[2:]
-
-                if check_domain(_parent_domain):
+                if check_domain(parent_domain):
                     domains.extend(
-                        map(
-                            lambda domain: {
-                                'domain': domain,
-                                'parent_domain': _parent_domain,
-                            } if check_domain(domain) or check_domain(domain[2:]) else None,
-                            # TableDomain(
-                            #     domain=domain,
-                            #     parent_domain=parent_domain
-                            # ),
-                            entities[parent_domain]
+                        filter(
+                            lambda domain: domain is not None,
+                            map(
+                                lambda domain: {
+                                    'domain': domain,
+                                    'parent_domain': parent_domain[:2] if parent_domain[:2] == '*.' else parent_domain,
+                                } if check_domain(domain) else None,
+                                # TableDomain(
+                                #     domain=domain,
+                                #     parent_domain=parent_domain
+                                # ),
+                                entities[parent_domain]
+                            )
                         )
                     )
-            domains = list(
-                filter(
-                    lambda domain: domain is not None,
-                    domains
-                )
-            )
 
             stmt = (
                 postgres_insert(TableDomain)
