@@ -30,7 +30,7 @@ class DomainRepository(AbstractRepository):
                             map(
                                 lambda domain: {
                                     'domain': domain,
-                                    'parent_domain': parent_domain[:2] if parent_domain[:2] == '*.' else parent_domain,
+                                    'parent_domain': parent_domain.replace('*.', ''),
                                 } if check_domain(domain) else None,
                                 # TableDomain(
                                 #     domain=domain,
@@ -58,10 +58,13 @@ class DomainRepository(AbstractRepository):
         raise NotImplementedException
 
     async def list(self, parent_domain: str) -> Sequence[str] | None:
+        if not check_domain(parent_domain):
+            return []
+
         with Session(self.database.engine) as session:
             rows = (
                 session.query(TableDomain)
-                .filter_by(parent_domain=parent_domain)
+                .filter_by(parent_domain=parent_domain.replace('*.', ''))
                 .all()
             )
 
@@ -73,10 +76,12 @@ class DomainRepository(AbstractRepository):
             )
 
     async def delete(self, parent_domain: str):
-        with Session(self.database.engine) as session:
-            stmt = (
-                delete(TableDomain)
-                .where(TableDomain.parent_domain == parent_domain)
-            )
-            session.execute(stmt)
-            session.commit()
+        if check_domain(parent_domain):
+            
+            with Session(self.database.engine) as session:
+                stmt = (
+                    delete(TableDomain)
+                    .where(TableDomain.parent_domain == parent_domain.replace('*.', ''))
+                )
+                session.execute(stmt)
+                session.commit()
