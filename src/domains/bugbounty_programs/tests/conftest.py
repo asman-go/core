@@ -10,6 +10,8 @@ from asman.domains.bugbounty_programs.repo import (
     ProgramRepository,
 )
 from asman.domains.bugbounty_programs.use_cases import (
+    AddAssetsUseCase,
+    RemoveAssetsUseCase,
     DeleteProgramUseCase,
     CreateProgramUseCase,
     ReadProgramUseCase,
@@ -63,6 +65,27 @@ def program_data(assets):
         assets=assets,
         notes='Some notes'
     )
+
+
+@pytest.fixture
+def program_data_other(assets):
+    return ProgramData(
+        program_name='NewProgram',
+        program_site='https://example.com/program1',
+        platform='h1',
+        assets=assets,
+        notes='Some notes'
+    )
+
+
+@pytest.fixture
+def add_assets_use_case(postgres_config):
+    return AddAssetsUseCase(None, postgres_config)
+
+
+@pytest.fixture
+def remove_assets_use_case(postgres_config):
+    return RemoveAssetsUseCase(None, postgres_config)
 
 
 @pytest.fixture

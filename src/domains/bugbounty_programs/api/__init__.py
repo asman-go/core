@@ -1,4 +1,6 @@
 from .schema import (
+    AddAssetsRequest,
+    RemoveAssetsRequest,
     Asset,
     AssetType,
     Program,
@@ -8,6 +10,8 @@ from .schema import (
 )
 
 __all__ = [
+    AddAssetsRequest,
+    RemoveAssetsRequest,
     Asset,
     AssetType,
     Program,

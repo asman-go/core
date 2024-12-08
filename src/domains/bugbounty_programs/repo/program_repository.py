@@ -26,6 +26,13 @@ class ProgramRepository(AbstractRepository):
     async def insert(self, entity: ProgramData) -> int | None:
         # Use a transaction
         with Session(self.database.engine) as session:
+            # Ищем, вдруг такая программа уже есть
+            programs = await self.list()
+            programs = list(filter(lambda program: program.data == entity, programs))
+            if programs:
+                return programs[0].id
+
+            # Добавляем программу
             NEW_PROGRAM = TableProgram(
                 program_name = entity.program_name,
                 program_site = entity.program_site,

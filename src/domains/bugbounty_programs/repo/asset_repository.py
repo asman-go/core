@@ -33,6 +33,13 @@ class AssetRepository(AbstractRepository):
                 )
                 .first()
             )
+
+            # Добавляем только новые ассеты
+            program_model = TableProgram.convert(program) if program else None
+            new_entities = list(
+                filter(lambda asset: asset not in program_model.data.assets, entities)
+            )
+
             assets = list(
                 map(
                     lambda asset: TableAsset(
@@ -43,7 +50,7 @@ class AssetRepository(AbstractRepository):
                         in_scope=asset.in_scope,
                         is_paid=asset.is_paid,
                     ),
-                    entities
+                    new_entities
                 )
             )
 
