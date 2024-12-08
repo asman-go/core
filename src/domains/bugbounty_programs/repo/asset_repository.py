@@ -17,7 +17,6 @@ from asman.domains.bugbounty_programs.api import (
     Asset,
     Program,
     ProgramData,
-    ProgramId,
 )
 
 
@@ -25,12 +24,12 @@ class AssetRepository(AbstractRepository):
     def __init__(self, database: Postgres) -> None:
         self.database = database
 
-    async def insert(self, programId: ProgramId, entities: Sequence[Asset]) -> None:
+    async def insert(self, program_id: int, entities: Sequence[Asset]) -> None:
         with Session(self.database.engine) as session:
             program = (
                 session.query(TableProgram)
                 .filter_by(
-                    id=programId.id,
+                    id=program_id,
                 )
                 .first()
             )
@@ -60,16 +59,16 @@ class AssetRepository(AbstractRepository):
     async def get_by_id(self, entity_id) -> Entity | None:
         raise NotImplementedException
 
-    async def list(self, programId: ProgramId) -> Sequence[Asset] | None:
+    async def list(self, program_id: int) -> Sequence[Asset] | None:
         with Session(self.database.engine) as session:
             rows = (
                 session.query(TableAsset)
-                .filter_by(program_id=programId.id)
+                .filter_by(program_id=program_id)
                 .all()
             )
             # rows = session.execute(
             #     select(TableAsset)
-            #     .where(program_id=programId.id)
+            #     .where(program_id=program_id)
             # )
             return list(
                 map(
@@ -78,13 +77,13 @@ class AssetRepository(AbstractRepository):
                 )
             )
 
-    async def delete(self, programId: ProgramId, entities: Sequence[Asset]) -> None:
+    async def delete(self, program_id: int, entities: Sequence[Asset]) -> None:
         with Session(self.database.engine) as session:
             stmt = (
                 delete(TableAsset)
                 .where(
                     and_(
-                        TableAsset.program_id == programId.id,
+                        TableAsset.program_id == program_id,
                         TableAsset.value.in_(
                             list(map(
                                 lambda x: x.value,

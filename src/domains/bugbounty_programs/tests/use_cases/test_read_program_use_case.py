@@ -34,7 +34,7 @@ async def test_read_program_use_case_execute(
     program = await read_program_by_id_use_case.execute(program_id_1)
 
     assert program
-    assert program_id_1.id == program.id.id
+    assert program_id_1 == program.id
     assert program_data.program_name == program.data.program_name
     assert program_data.program_site == program.data.program_site
     assert program_data.platform == program.data.platform

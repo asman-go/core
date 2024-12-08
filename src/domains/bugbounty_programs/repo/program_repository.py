@@ -16,7 +16,6 @@ from asman.domains.bugbounty_programs.api import (
     # CreateProgramRequest,
     Program,
     ProgramData,
-    ProgramId,
 )
 
 
@@ -68,7 +67,7 @@ class ProgramRepository(AbstractRepository):
         with Session(self.database.engine) as session:
             stmt = (
                 update(TableProgram)
-                .where(TableProgram.id == entity.id.id)
+                .where(TableProgram.id == entity.id)
                 .values(
                     program_name=entity.data.program_name,
                     program_site=entity.data.program_site,
@@ -82,22 +81,22 @@ class ProgramRepository(AbstractRepository):
             updated_entity = (
                 session.query(TableProgram)
                 .filter_by(
-                    id=entity.id.id,
+                    id=entity.id,
                 )
                 .first()
             )
 
             return TableProgram.convert(updated_entity)
 
-    async def get_by_id(self, entity_id: ProgramId) -> Program | None:
+    async def get_by_id(self, entity_id: int) -> Program | None:
         with Session(self.database.engine) as session:
             # row = session.scalar(
             #     select(TableProgram)
-            #     .where(TableProgram.id == entity_id.id)
+            #     .where(TableProgram.id == entity_id)
             # )
             row = (
                 session.query(TableProgram)
-                .filter_by(id=entity_id.id)
+                .filter_by(id=entity_id)
                 .first()
             )
 
@@ -116,17 +115,17 @@ class ProgramRepository(AbstractRepository):
                 )
             )
 
-    async def delete(self, programId: ProgramId):
+    async def delete(self, program_id: int):
         with Session(self.database.engine) as session:
             stmt = (
                 delete(TableAsset)
-                .where(TableAsset.program_id == programId.id)
+                .where(TableAsset.program_id == program_id)
             )
             session.execute(stmt)
 
             stmt = (
                 delete(TableProgram)
-                .where(TableProgram.id == programId.id)
+                .where(TableProgram.id == program_id)
             )
             session.execute(stmt)
 

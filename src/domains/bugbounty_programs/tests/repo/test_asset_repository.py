@@ -3,7 +3,6 @@ import pytest
 from asman.domains.bugbounty_programs.api import (
     Asset,
     AssetType,
-    ProgramId,
 )
 from asman.domains.bugbounty_programs.repo import AssetRepository
 
@@ -17,7 +16,7 @@ def test_asset_repository_instance_create(db_in_memory):
 @pytest.fixture
 async def programId(program_repository, program_data):
     program_id = await program_repository.insert(program_data)
-    return ProgramId(id=program_id)
+    return program_id
 
 
 @pytest.mark.asyncio

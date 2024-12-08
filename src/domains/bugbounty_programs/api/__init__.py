@@ -3,7 +3,6 @@ from .schema import (
     AssetType,
     Program,
     ProgramData,
-    ProgramId,
     # CreateProgramRequest,
     # CreateProgramResponse,
 )
@@ -13,7 +12,6 @@ __all__ = [
     AssetType,
     Program,
     ProgramData,
-    ProgramId,
     # CreateProgramRequest,
     # CreateProgramResponse,
 ]

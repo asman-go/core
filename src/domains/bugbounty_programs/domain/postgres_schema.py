@@ -8,7 +8,6 @@ from asman.domains.bugbounty_programs.api import (
     AssetType,
     Program,
     ProgramData,
-    ProgramId,
 )
 
 TABLE_ASSET_NAME = 'assets'
@@ -39,9 +38,7 @@ class TableProgram(TableBase):
         )
 
         return Program(
-            id=ProgramId(
-                id=item.id
-            ),
+            id=item.id,
             data=ProgramData(
                 program_name=item.program_name,
                 program_site=item.program_site,

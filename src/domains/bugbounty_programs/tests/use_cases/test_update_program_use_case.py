@@ -32,5 +32,5 @@ async def test_update_program_use_case_execute(
     )
 
     assert updated_program
-    assert updated_program.id.id == program_id.id
+    assert updated_program.id == program_id
     assert updated_program.data.program_name == 'SOME_NEW_VALUE'

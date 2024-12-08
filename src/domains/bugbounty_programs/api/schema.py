@@ -38,10 +38,6 @@ class ProgramData(BaseModel):
     notes: StrictStr
 
 
-class ProgramId(BaseModel):
-    id: PositiveInt
-
-
 class Program(BaseModel):
-    id: ProgramId
+    id: PositiveInt
     data: ProgramData
