@@ -37,8 +37,6 @@ class SubscribeNewDomainsUseCase(AbstractUseCase):
         # 2. If it is new domain we'll subscribe for updates
             return await fb_client.subscribe(domains)
 
-            return domains
-
         # 3. Save results
         # await self.repo.insert(result)        
         # return result.keys()
