@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence
 
-from asman.core.adapters.db import Database
+from asman.core.adapters.db import DatabaseFacade
 from asman.core.arch import Entity
 
 
 class AbstractRepository(ABC):
     @abstractmethod
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: DatabaseFacade) -> None:
         ...
 
     @abstractmethod

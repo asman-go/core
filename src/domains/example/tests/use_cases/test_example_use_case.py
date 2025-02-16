@@ -1,18 +1,17 @@
 import pytest
 
-from asman.domains.example.use_cases.example_use_case import ExampleUseCase
-from asman.domains.example import Request
+from asman.domains.example import ExampleUseCase, Request
 
 
 @pytest.fixture
-def example_use_case(usecase_config, dynamodb_config):
-    use_case = ExampleUseCase(usecase_config, dynamodb_config)
+def example_use_case(usecase_config, init_dynamodb_config):
+    use_case = ExampleUseCase(usecase_config)
 
     return use_case
 
 
-def test_example_use_case_create(usecase_config, dynamodb_config):
-    use_case = ExampleUseCase(usecase_config, dynamodb_config)
+def test_example_use_case_create(usecase_config, init_dynamodb_config):
+    use_case = ExampleUseCase(usecase_config)
 
     assert use_case
     assert use_case.repo

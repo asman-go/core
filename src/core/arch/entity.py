@@ -6,7 +6,7 @@ class Entity(pydantic.BaseModel):
     """
         Модель для Database и бизнес модели
     """
-    id: uuid.UUID = pydantic.Field(default_factory=lambda: uuid.uuid4())
+    id: str = pydantic.Field(default_factory=lambda: str(uuid.uuid4()))
 
 
 class BusinessEntity(pydantic.BaseModel):

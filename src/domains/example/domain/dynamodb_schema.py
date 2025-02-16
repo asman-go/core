@@ -1,19 +1,31 @@
-DYNAMODB_TABLE_NAME = 'example'
+from asman.core.adapters.db.dynamodb import (
+    TableBase,
 
-DYNAMODB_KEY_SCHEMA = [
-    {
-        'AttributeName': 'id',
-        'KeyType': 'HASH'
-    }
-]
+    Key,
+    AttributeDefinition,
+    ProvisionedThroughput,
+)
 
-DYNAMODB_ATTRIBUTE_DEFINITIONS = [
-    {
-        'AttributeName': 'id',
-        'AttributeType': 'S'
-    },
-    {
-        'AttributeName': 'address',
-        'AttributeType': 'S'
-    }
-]
+
+EXAMPLE_TABLE_NAME = 'example'
+
+
+class ExampleTable(TableBase):
+    table_name = EXAMPLE_TABLE_NAME
+    key_schema = [
+        Key(
+            AttributeName='id',
+            KeyType='HASH',
+        )
+    ]
+    attribute_definitions = [
+        AttributeDefinition(
+            AttributeName='id',
+            AttributeType='S',
+        ),
+        # AttributeDefinition(
+        #     AttributeName='address',
+        #     AttributeType='S',
+        # )
+    ]
+    provisioned_throughput = ProvisionedThroughput()

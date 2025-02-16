@@ -1,9 +1,10 @@
+from pydantic import BaseModel, Field
 from typing import Sequence
 
 from sqlalchemy import select, insert, update, delete, and_
 from sqlalchemy.orm import Session
 
-from asman.core.adapters.db import Database, Postgres
+from asman.core.adapters.db import DatabaseFacade
 from asman.core.arch import AbstractRepository, Entity
 from asman.core.exceptions import NotImplementedException
 
@@ -20,8 +21,12 @@ from asman.domains.bugbounty_programs.api import (
 )
 
 
+class _SearchByProgram(BaseModel):
+    program_id: str = Field()
+
+
 class AssetRepository(AbstractRepository):
-    def __init__(self, database: Postgres) -> None:
+    def __init__(self, database: DatabaseFacade) -> None:
         self.database = database
 
     async def insert(self, program_id: int, entities: Sequence[Asset]) -> None:
@@ -67,6 +72,16 @@ class AssetRepository(AbstractRepository):
         raise NotImplementedException
 
     async def list(self, program_id: int) -> Sequence[Asset] | None:
+        found = self.database.query([_SearchByProgram(program_id=program_id)])
+        if not found:
+            return None
+        
+        return list(
+                map(
+                    lambda x: TableAsset.convert(x),
+                    found
+                )
+            )
         with Session(self.database.engine) as session:
             rows = (
                 session.query(TableAsset)

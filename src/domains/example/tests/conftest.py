@@ -1,14 +1,10 @@
 import pytest
 
 from asman.domains.example.domain.config import Config
-from asman.core.adapters.db import MockDynamoDB, DynamoDBConfig
+from asman.core.adapters.db import DatabaseFacade, Databases
 from asman.domains.example.domain.example_entity import ExampleEntity
 
-from asman.domains.example.domain.dynamodb_schema import (
-    DYNAMODB_TABLE_NAME,
-    DYNAMODB_KEY_SCHEMA,
-    DYNAMODB_ATTRIBUTE_DEFINITIONS,
-)
+from asman.domains.example.domain import TABLE_NAME
 from asman.domains.example.repo.example_repository import ExampleRepository
 
 
@@ -26,7 +22,7 @@ def example_repository(dynamodb, dynamodb_table_name):
 
 @pytest.fixture
 def usecase_config(monkeypatch):
-    ENV_SOME_VALUE = 'testtest'
+    ENV_SOME_VALUE = '123456'
     monkeypatch.setenv('some_value', ENV_SOME_VALUE)
 
     config = Config()
@@ -38,42 +34,18 @@ def dynamodb_table_name():
     """
         Таблица, в которой что-то храним в DynamoDB
     """
-    return DYNAMODB_TABLE_NAME
+    return TABLE_NAME
 
 
 @pytest.fixture
-def dynamodb_key_schema():
-    """
-        Схема ключей таблицы dynamodb_table_name в DynamoDB
-    """
-    return DYNAMODB_KEY_SCHEMA
+def init_dynamodb_config(monkeypatch):
+    monkeypatch.setenv('DOCUMENT_API_ENDPOINT', 'http://localhost:8000')
+    monkeypatch.setenv('AWS_ACCESS_KEY_ID', '12345')
 
 
 @pytest.fixture
-def dynamodb_attribute_definitions():
-    """
-        Схема столбцов таблицы dynamodb_table_name в DynamoDB
-    """
-    return DYNAMODB_ATTRIBUTE_DEFINITIONS
-
-
-@pytest.fixture
-def dynamodb_config() -> DynamoDBConfig:
-    return DynamoDBConfig()
-
-
-@pytest.fixture
-def dynamodb(
-            dynamodb_config,
-            dynamodb_key_schema,
-            dynamodb_attribute_definitions
-        ):
-
-    db = MockDynamoDB(
-        dynamodb_config,
-        dynamodb_key_schema,
-        dynamodb_attribute_definitions,
+def dynamodb(init_dynamodb_config) -> DatabaseFacade:
+    return DatabaseFacade(
+        Databases.DynamoDB,
+        TABLE_NAME,
     )
-
-    # print('dynamodb', 'fixture', db)
-    return db

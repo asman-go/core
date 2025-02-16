@@ -1,4 +1,4 @@
-from asman.core.adapters.db import TableBase
+from asman.core.adapters.db.postgres import TableBase
 from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
 from sqlalchemy.schema import PrimaryKeyConstraint
 

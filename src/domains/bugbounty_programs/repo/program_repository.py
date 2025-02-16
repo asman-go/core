@@ -1,15 +1,18 @@
+from pydantic import BaseModel, Field
 from typing import Sequence
 
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.orm import Session
 
-from asman.core.adapters.db import Postgres
+from asman.core.adapters.db import DatabaseFacade
 from asman.core.arch import AbstractRepository, Entity
 from asman.core.exceptions import NotImplementedException
 
 from asman.domains.bugbounty_programs.domain import (
     TableAsset,
     TableProgram,
+    TABLE_ASSET_NAME,
+    TABLE_BUGBOUNTY_PROGRAM_NAME,
 )
 
 from asman.domains.bugbounty_programs.api import (
@@ -19,12 +22,26 @@ from asman.domains.bugbounty_programs.api import (
 )
 
 
+class _Search(BaseModel):
+    id: str = Field()
+
+
+class _SearchByProgram(BaseModel):
+    program_id: str = Field()
+
+
 class ProgramRepository(AbstractRepository):
-    def __init__(self, database: Postgres) -> None:
+    def __init__(self, database: DatabaseFacade) -> None:
         self.database = database
 
     async def insert(self, entity: ProgramData) -> int | None:
+        # И здесь вероятно будут проблемы
+        self.database.upsert(entity.assets, TABLE_ASSET_NAME)
+        self.database.upsert([entity], TABLE_BUGBOUNTY_PROGRAM_NAME)
+
+        return -1
         # Use a transaction
+
         with Session(self.database.engine) as session:
             # Ищем, вдруг такая программа уже есть
             programs = await self.list()
@@ -71,6 +88,14 @@ class ProgramRepository(AbstractRepository):
         """
             ассеты нельзя обновить, можно добавить или удалить
         """
+        # Здесь вероятно будут проблемы
+        self.database.upsert([entity], TABLE_BUGBOUNTY_PROGRAM_NAME)
+        found = self.database.query([_Search(id=entity.id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
+        assert found
+        assert len(found) == 1
+
+        return TableProgram.convert(found[0])
+
         with Session(self.database.engine) as session:
             stmt = (
                 update(TableProgram)
@@ -96,44 +121,24 @@ class ProgramRepository(AbstractRepository):
             return TableProgram.convert(updated_entity)
 
     async def get_by_id(self, entity_id: int) -> Program | None:
-        with Session(self.database.engine) as session:
-            # row = session.scalar(
-            #     select(TableProgram)
-            #     .where(TableProgram.id == entity_id)
-            # )
-            row = (
-                session.query(TableProgram)
-                .filter_by(id=entity_id)
-                .first()
-            )
+        found = self.database.query([_Search(id=entity_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
 
-            return TableProgram.convert(row) if row else None
+        if found and len(found) == 1:
+            return TableProgram.convert(found[0])
+
+        return None
 
     async def list(self) -> Sequence[Program] | None:
-        with Session(self.database.engine) as session:
-            rows = (
-                session.query(TableProgram)
-                .all()
+        found = self.database.query(table_name=TABLE_BUGBOUNTY_PROGRAM_NAME)
+
+        return list(
+            map(
+                lambda x: TableProgram.convert(x),
+                found
             )
-            return list(
-                map(
-                    lambda x: TableProgram.convert(x),
-                    rows
-                )
-            )
+        )
 
     async def delete(self, program_id: int):
-        with Session(self.database.engine) as session:
-            stmt = (
-                delete(TableAsset)
-                .where(TableAsset.program_id == program_id)
-            )
-            session.execute(stmt)
-
-            stmt = (
-                delete(TableProgram)
-                .where(TableProgram.id == program_id)
-            )
-            session.execute(stmt)
-
-            session.commit()
+        # TODO: transaction
+        self.database.delete([_SearchByProgram(program_id=program_id)], TABLE_ASSET_NAME)
+        self.database.delete([_Search(id=program_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)

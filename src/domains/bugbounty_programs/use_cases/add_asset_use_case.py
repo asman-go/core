@@ -1,15 +1,15 @@
 from pydantic_settings import BaseSettings
 
 from asman.core.arch import AbstractUseCase
-from asman.core.adapters.db import Postgres, PostgresConfig
+from asman.core.adapters.db import DatabaseFacade, Databases
 
 from asman.domains.bugbounty_programs.api import AddAssetsRequest
 from asman.domains.bugbounty_programs.repo import AssetRepository
 
 
 class AddAssetsUseCase(AbstractUseCase):
-    def __init__(self, config: BaseSettings, databaseConfig: PostgresConfig, *argv) -> None:
-        database = Postgres(databaseConfig)
+    def __init__(self) -> None:
+        database = DatabaseFacade(Databases.PostgreSQL)
         self.repo = AssetRepository(database)
 
     async def execute(self, request: AddAssetsRequest):

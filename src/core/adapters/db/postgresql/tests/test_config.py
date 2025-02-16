@@ -1,7 +1,4 @@
-import pytest
-from pydantic_core import ValidationError
-
-from asman.core.adapters.db import PostgresConfig
+from asman.core.adapters.db.postgresql import PostgresConfig
 
 
 def test_postgres_config_create(monkeypatch):
@@ -23,10 +20,3 @@ def test_postgres_config_create(monkeypatch):
     assert config.POSTGRES_PASSWORD == POSTGRES_PASSWORD
     assert config.POSTGRES_HOST == DEFAULT_HOST
     assert config.POSTGRES_PORT == DEFAULT_PORT
-
-
-# def test_posrgres_config_create_throws_validation_error_exception():
-#     with pytest.raises(ValidationError) as exc:
-#         PostgresConfig()
-    
-#     assert isinstance(exc.value, ValidationError)

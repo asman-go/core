@@ -1,4 +1,4 @@
-from asman.core.adapters.db import DynamoDBConfig
+from asman.core.adapters.db.dynamodb import DynamoDBConfig
 
 
 def test_dynamodb_config_create(monkeypatch):

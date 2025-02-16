@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
-from asman.core.adapters.db import TableBase
+from asman.core.adapters.db.postgresql import TableBase
 
 from asman.domains.bugbounty_programs.api import (
     Asset,
@@ -24,8 +24,8 @@ class TableProgram(TableBase):
     notes = Column(String)
 
     assets = relationship(
-        "TableAsset",   # TableAsset — of python type associated with 'assets' table
-        back_populates="program",  # program — field in TableAsset
+        'TableAsset',   # TableAsset — of python type associated with 'assets' table
+        back_populates='program',  # program — field in TableAsset
     )
 
     @staticmethod
@@ -63,7 +63,7 @@ class TableAsset(TableBase):
 
     program = relationship(
         TableProgram,
-        back_populates="assets",
+        back_populates='assets',
     )
 
     @staticmethod

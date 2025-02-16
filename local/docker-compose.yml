@@ -1,7 +1,5 @@
-version: '3'
-
 services:
-  db:
+  postgres:
     image: postgres:alpine
     restart: always
     ports:
@@ -10,6 +8,20 @@ services:
       POSTGRES_DB: my_db
       POSTGRES_USER: my_user
       POSTGRES_PASSWORD: my_password
+    command: >
+      postgres -c log_statement=all
     volumes:
       - ./postgres_init:/docker-entrypoint-initdb.d
-      - ./postgres_data:/var/lib/postgresql/data
+      # logs into container: /var/lib/postgresql/data/log
+      - postgres_data:/var/lib/postgresql/data
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    restart: always
+    environment:
+      DYNAMODB_LOCAL_LOG_LEVEL: DEBUG
+    ports:
+      - 8000:8000
+
+volumes:
+  postgres_data:

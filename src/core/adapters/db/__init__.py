@@ -1,15 +1,16 @@
-from .base import Database
-from .dynamodb import DynamoDB, DynamoDBConfig
-from .mocks.dynamodb import MockDynamoDB
-from .postgres import Postgres, PostgresConfig, TableBase
-
+# from .base import Database
+# from ._dynamodb import DynamoDB, DynamoDBConfig
+# from .postgres import Postgres, PostgresConfig, TableBase
+from .facade import DatabaseFacade, Databases
 
 __all__ = [
-    Database,
-    DynamoDB,
-    DynamoDBConfig,
-    MockDynamoDB,
-    Postgres,
-    PostgresConfig,
-    TableBase,
+    # Database,
+    # DynamoDB,
+    # DynamoDBConfig,
+    # Postgres,
+    # PostgresConfig,
+    # TableBase,
+
+    DatabaseFacade,
+    Databases,
 ]
