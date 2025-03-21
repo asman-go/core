@@ -9,7 +9,7 @@ class DatabaseInterface(ABC):
         ...
 
     @abstractmethod
-    def upsert(self, table_name: str, data: List[BaseModel]):
+    def upsert(self, table_name: str, data: List[BaseModel]) -> List:
         ...
 
     @abstractmethod
@@ -17,9 +17,9 @@ class DatabaseInterface(ABC):
         ...
 
     @abstractmethod
-    def delete(self, table_name: str, data: List[BaseModel]):
+    def delete(self, table_name: str, data: List[BaseModel]) -> List:
         ...
 
     @abstractmethod
-    def delete_all(self, table_name: str):
+    def delete_all(self, table_name: str) -> List:
         ...

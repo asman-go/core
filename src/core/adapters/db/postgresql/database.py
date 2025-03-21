@@ -2,11 +2,13 @@ import logging
 import sqlalchemy
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session, declarative_base
+from typing import List
 
 from .config import PostgresConfig
 from .utils import (
-    _make_stmt,
-    _get_unique_constraints,
+    make_stmt,
+    get_unique_constraints,
+    get_autoincrement,
 )
 from ..interface import DatabaseInterface
 
@@ -38,7 +40,7 @@ class Postgres(DatabaseInterface):
     def _get_table(self, name: str) -> sqlalchemy.Table:
         return sqlalchemy.Table(name, TableBase.metadata, autoload_with=self.engine)
 
-    def upsert(self, table_name, data):
+    def upsert(self, table_name, data) -> List:
         # Получаем класс таблицы по имени таблицы
         table = self._get_table(table_name)
 
@@ -50,23 +52,46 @@ class Postgres(DatabaseInterface):
                 .values(
                     list(
                         map(
-                            lambda item: item.model_dump(),
+                            lambda item: item.model_dump(
+                                # В модели могут быть другие поля, добавляем только табличные (при этом сгенерированные табличные не пишем)
+                                include=item.model_fields.keys() & table.columns.keys(),
+                            ),
                             data
                         )
                     )
                 )
             )
-            # Чтобы использовать эту функцию, надо использовать insert из диалекта postgres, а не общую
-            stmt = stmt.on_conflict_do_update(
-                index_elements=_get_unique_constraints(table),
-                # set_=table.columns,  # Оставить старые поля == on_conflict_do_nothing
-                set_=stmt.excluded,  # Оставить новые поля == upsert
+
+            constraints = get_unique_constraints(table)
+            set_ = dict()
+            for column in table.columns:
+                if column.autoincrement != True and column.name not in constraints:
+                    set_[column.name] = stmt.excluded[column.name]
+
+            if constraints:
+                if set_:
+                    # Чтобы использовать эту функцию, надо использовать insert из диалекта postgres, а не общую
+                    stmt = stmt.on_conflict_do_update(
+                        index_elements=constraints,
+                        # set_=table.columns,  # Оставить старые поля == on_conflict_do_nothing
+                        # set_=stmt.excluded,  # Оставить новые поля == upsert
+                        set_=set_,  # Оставить новые поля == upsert, автоикременты не обновляем (в модели null будет — ошибка) и вообще все unique и PK?
+                    )
+                else:
+                    stmt = stmt.on_conflict_do_nothing(
+                        index_elements=constraints,
+                    )
+
+            stmt = stmt.returning(
+                *table.primary_key.columns.values(),
             )
 
-            session.execute(stmt)
+            result = session.execute(stmt)
             session.commit()
 
-    def delete(self, table_name, data):
+            return result.fetchall()
+
+    def delete(self, table_name, data) -> List:
         # Получаем класс ORM модели по имени таблицы
         table = self._get_table(table_name)
 
@@ -74,26 +99,38 @@ class Postgres(DatabaseInterface):
             stmt = (
                 sqlalchemy.delete(table)
                 .where(
-                    _make_stmt(
+                    make_stmt(
                         table,
                         *data
                     ) if data else False
                 )
+                .returning(
+                    *table.primary_key.columns.values(),
+                )
             )
 
-            session.execute(stmt)
+            result = session.execute(stmt)
             session.commit()
 
-    def delete_all(self, table_name):
+            return result.fetchall()
+
+    def delete_all(self, table_name) -> List:
+        table = self._get_table(table_name)
 
         with Session(self.engine) as session:
-            stmt = sqlalchemy.delete(
-                self._get_table(table_name)
+            stmt = (
+                sqlalchemy.delete(
+                    table
+                ).returning(
+                    *table.primary_key.columns.values(),
+                )
             )
-            session.execute(stmt)
+            result = session.execute(stmt)
             session.commit()
 
-    def items(self, table_name, ids=None):
+            return result.fetchall()
+
+    def items(self, table_name, ids=None) -> List:
         table = self._get_table(table_name)
 
         with Session(self.engine) as session:
@@ -101,9 +138,7 @@ class Postgres(DatabaseInterface):
                 session
                 .query(table)
                 .where(
-                    _make_stmt(table, *ids) if ids else True
+                    make_stmt(table, *ids) if ids else True
                 )
                 .all()
             )
-
-        return super().items(table_name, ids)

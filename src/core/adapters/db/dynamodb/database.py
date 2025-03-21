@@ -74,17 +74,19 @@ class DynamoDB(DatabaseInterface):
 
         return search
 
-    def upsert(self, table_name, data):
+    def upsert(self, table_name, data) -> typing.List:
         table = self._get_table(table_name)
         # table.put_item(Item=data.model_dump())  # put 1 item
 
         with table.batch_writer() as batch:
-            for item in data:
+            return [
                 batch.put_item(
                     Item=item.model_dump()
                 )
+                for item in data
+            ]
 
-    def items(self, table_name, ids=None):
+    def items(self, table_name, ids=None) -> typing.List:
         _items = list()
         table = self._get_table(table_name)
         def _get_item(id):
@@ -118,12 +120,14 @@ class DynamoDB(DatabaseInterface):
 
         return [_item for _item in _items if _item is not None]
 
-    def delete(self, table_name, data):
+    def delete(self, table_name, data) -> typing.List:
         table = self._get_table(table_name)
-        for key in data:
+        return [
             table.delete_item(
                 Key=self._get_filter(table_name, key.model_dump()),
             )
+            for key in data
+        ]
 
     def delete_all(self, table_name):
         self._client.delete_table(TableName=table_name)

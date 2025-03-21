@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, create_model
 from typing import Sequence
 
 from sqlalchemy import select, insert, update, delete, and_
@@ -12,6 +12,10 @@ from asman.domains.bugbounty_programs.domain import (
     TableAsset,
     TableProgram,
 )
+from asman.domains.bugbounty_programs.domain import (
+    TABLE_ASSET_NAME,
+    TABLE_BUGBOUNTY_PROGRAM_NAME,
+)
 
 from asman.domains.bugbounty_programs.api import (
     # CreateProgramRequest,
@@ -20,9 +24,7 @@ from asman.domains.bugbounty_programs.api import (
     ProgramData,
 )
 
-
-class _SearchByProgram(BaseModel):
-    program_id: str = Field()
+from .utils import SearchById, SearchByProgramId
 
 
 class AssetRepository(AbstractRepository):
@@ -30,6 +32,11 @@ class AssetRepository(AbstractRepository):
         self.database = database
 
     async def insert(self, program_id: int, entities: Sequence[Asset]) -> None:
+
+        _assets = self.database.query(
+            query=[SearchByProgramId(program_id=program_id)],
+            table_name=TABLE_ASSET_NAME,
+        )
         with Session(self.database.engine) as session:
             program = (
                 session.query(TableProgram)
@@ -72,7 +79,7 @@ class AssetRepository(AbstractRepository):
         raise NotImplementedException
 
     async def list(self, program_id: int) -> Sequence[Asset] | None:
-        found = self.database.query([_SearchByProgram(program_id=program_id)])
+        found = self.database.query([SearchByProgramId(program_id=program_id)])
         if not found:
             return None
         

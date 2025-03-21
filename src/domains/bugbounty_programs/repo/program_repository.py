@@ -1,4 +1,3 @@
-from pydantic import BaseModel, Field
 from typing import Sequence
 
 from sqlalchemy import select, insert, update, delete
@@ -21,13 +20,7 @@ from asman.domains.bugbounty_programs.api import (
     ProgramData,
 )
 
-
-class _Search(BaseModel):
-    id: str = Field()
-
-
-class _SearchByProgram(BaseModel):
-    program_id: str = Field()
+from .utils import SearchById, SearchByProgramId
 
 
 class ProgramRepository(AbstractRepository):
@@ -90,7 +83,7 @@ class ProgramRepository(AbstractRepository):
         """
         # Здесь вероятно будут проблемы
         self.database.upsert([entity], TABLE_BUGBOUNTY_PROGRAM_NAME)
-        found = self.database.query([_Search(id=entity.id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
+        found = self.database.query([SearchById(id=entity.id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
         assert found
         assert len(found) == 1
 
@@ -121,7 +114,7 @@ class ProgramRepository(AbstractRepository):
             return TableProgram.convert(updated_entity)
 
     async def get_by_id(self, entity_id: int) -> Program | None:
-        found = self.database.query([_Search(id=entity_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
+        found = self.database.query([SearchById(id=entity_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
 
         if found and len(found) == 1:
             return TableProgram.convert(found[0])
@@ -140,5 +133,5 @@ class ProgramRepository(AbstractRepository):
 
     async def delete(self, program_id: int):
         # TODO: transaction
-        self.database.delete([_SearchByProgram(program_id=program_id)], TABLE_ASSET_NAME)
-        self.database.delete([_Search(id=program_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)
+        self.database.delete([SearchByProgramId(program_id=program_id)], TABLE_ASSET_NAME)
+        self.database.delete([SearchById(id=program_id)], TABLE_BUGBOUNTY_PROGRAM_NAME)

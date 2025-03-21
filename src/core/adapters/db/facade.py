@@ -36,21 +36,21 @@ class DatabaseFacade:
         if database == Databases.DynamoDB:
             self._database = DynamoDB()
 
-    def upsert(self, items: List[BaseModel], table_name: str | None = None):
+    def upsert(self, items: List[BaseModel], table_name: str | None = None) -> List:
         # TODO: Возможно, должны быть реализованы обе стратегии — on conflict update и on conflict ignore
 
         _table_name = table_name if table_name else self._table_name
 
-        self._database.upsert(_table_name, unique(items))
+        return self._database.upsert(_table_name, unique(items))
 
     def query(self, query: List[BaseModel] = [], table_name: str | None = None) -> List[BaseModel]:
         _table_name = table_name if table_name else self._table_name
         return self._database.items(_table_name, query)
 
-    def delete(self, items: List[BaseModel], table_name: str | None = None):
+    def delete(self, items: List[BaseModel], table_name: str | None = None) -> List:
         _table_name = table_name if table_name else self._table_name
-        self._database.delete(_table_name, items)
+        return self._database.delete(_table_name, items)
 
-    def clear(self, table_name: str | None = None):
+    def clear(self, table_name: str | None = None) -> List:
         _table_name = table_name if table_name else self._table_name
-        self._database.delete_all(_table_name)
+        return self._database.delete_all(_table_name)

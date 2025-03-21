@@ -18,11 +18,15 @@ def _unit_column_elements_and(*elements: sqlalchemy.ColumnElement) -> sqlalchemy
     )
 
 
-def _get_unique_constraints(table: sqlalchemy.Table) -> typing.List[str]:
+def get_unique_constraints(table: sqlalchemy.Table) -> typing.List[str]:
+    """
+        Возвращает имена столбцов, которые уникальные или primary key, но не автоинкрементальные
+    """
+
     unique_columns = set()
 
     # Добавляем PRIMARY KEY
-    primary_keys = [column.name for column in table.primary_key.columns]
+    primary_keys = [column.name for column in table.primary_key.columns if column.autoincrement != True]  # autoincrement может быть True, False, auto
     unique_columns.update(primary_keys)
 
     # Добавляем UNIQUE ограничения
@@ -33,9 +37,16 @@ def _get_unique_constraints(table: sqlalchemy.Table) -> typing.List[str]:
     return list(unique_columns)
 
 
+def get_autoincrement(table: sqlalchemy.Table) -> typing.List[str]:
+    """
+        Возвращаем имена автоинкрементных столцов (primary key)
+    """
+    return [column.name for column in table.primary_key.columns if column.autoincrement]
+
+
 # items -> (a and b and c) or (d and e) or ...
 # item — пары столбец-значение, они объединяются через AND
-def _make_stmt(table: sqlalchemy.Table, *items: pydantic.BaseModel) -> sqlalchemy.ColumnElement:
+def make_stmt(table: sqlalchemy.Table, *items: pydantic.BaseModel) -> sqlalchemy.ColumnElement:
 
     def _make_part_of_stmt(item: pydantic.BaseModel) -> sqlalchemy.ColumnElement:
         data = item.model_dump()

@@ -1,4 +1,10 @@
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
+from sqlalchemy import (
+    Column,
+    String,
+    Boolean,
+    Integer,
+    ForeignKey,
+)
 from sqlalchemy.orm import relationship
 
 from asman.core.adapters.db.postgresql import TableBase
@@ -19,7 +25,7 @@ class TableProgram(TableBase):
 
     id = Column(Integer, primary_key=True)
     program_name = Column(String)
-    program_site = Column(String)
+    program_site = Column(String, primary_key=True)
     platform = Column(String)
     notes = Column(String)
 
@@ -53,7 +59,7 @@ class TableAsset(TableBase):
     __tablename__ = TABLE_ASSET_NAME
 
     id = Column(Integer, primary_key=True)
-    value = Column(String)
+    value = Column(String, primary_key=True)
     # program_id = Column(ForeignKey(f'{TABLE_BUGBOUNTY_PROGRAM_NAME}.id'))
     program_id = Column(ForeignKey(TableProgram.id))
 
