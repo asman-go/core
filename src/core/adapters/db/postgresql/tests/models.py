@@ -1,7 +1,6 @@
 import pydantic
 import sqlalchemy
 from sqlalchemy.orm import relationship
-from typing import List
 
 from asman.core.adapters.db.postgresql import TableBase
 

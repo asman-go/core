@@ -5,12 +5,6 @@ from asman.core.adapters.db.postgresql import Postgres
 from asman.core.adapters.db.postgresql.tests import Item, TableDebug, TABLE_DEBUG_NAME
 
 
-@pytest.fixture(autouse=True)
-def clear_table(postgres_instance):
-    # Перед каждым тестом очищаем таблицу
-    postgres_instance.delete_all(TABLE_DEBUG_NAME)
-
-
 def test_postgres_instance_create(init_postgres_envs):
     postgres = Postgres()
 

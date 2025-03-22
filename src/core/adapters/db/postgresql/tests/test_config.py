@@ -11,6 +11,8 @@ def test_postgres_config_create(monkeypatch):
     monkeypatch.setenv('POSTGRES_DB', POSTGRES_DB)
     monkeypatch.setenv('POSTGRES_USER', POSTGRES_USER)
     monkeypatch.setenv('POSTGRES_PASSWORD', POSTGRES_PASSWORD)
+    monkeypatch.setenv('POSTGRES_HOST', DEFAULT_HOST)
+    monkeypatch.setenv('POSTGRES_PORT', DEFAULT_PORT)
 
     config = PostgresConfig()
 

@@ -1,6 +1,5 @@
 import pytest
-from pydantic import BaseModel, Field, create_model, TypeAdapter
-from typing import Dict, Any
+from pydantic import create_model
 from sqlalchemy.dialects.postgresql import insert
 
 from asman.core.adapters.db.postgresql.tests import (
@@ -14,14 +13,6 @@ from asman.core.adapters.db.postgresql.utils import (
     get_autoincrement,
     get_unique_constraints,
 )
-
-
-@pytest.fixture(autouse=True)
-def clear_table(postgres_instance):
-    # Перед каждым тестом очищаем таблицу
-    postgres_instance.delete_all(TABLE_PARENT_CHILD_ASSOCIATION_NAME)
-    postgres_instance.delete_all(TABLE_CHILDREN_NAME)
-    postgres_instance.delete_all(TABLE_PARENTS_NAME)
 
 
 def test_crud(postgres_instance):

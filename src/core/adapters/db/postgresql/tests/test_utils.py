@@ -15,14 +15,6 @@ from asman.core.adapters.db.postgresql.utils import (
 )
 
 
-@pytest.fixture(autouse=True)
-def clear_table(postgres_instance):
-    # Перед каждым тестом очищаем таблицу
-    postgres_instance.delete_all(TABLE_PARENT_CHILD_ASSOCIATION_NAME)
-    postgres_instance.delete_all(TABLE_CHILDREN_NAME)
-    postgres_instance.delete_all(TABLE_PARENTS_NAME)
-
-
 def _get_table(table_name: str, postgres_instance) -> sqlalchemy.Table:
     return sqlalchemy.Table(
         table_name,

@@ -9,8 +9,12 @@ from .models import (
     TABLE_DEBUG_NAME,
 )
 
+from .conftest import init_postgres_envs
+
 
 __all__ = [
+    init_postgres_envs,
+
     Child,
     Parent,
     Item,
