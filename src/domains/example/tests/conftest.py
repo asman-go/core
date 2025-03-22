@@ -6,6 +6,7 @@ from asman.domains.example.domain.example_entity import ExampleData
 
 from asman.domains.example.domain import TABLE_NAME
 from asman.domains.example.repo.example_repository import ExampleRepository
+from asman.core.adapters.db.dynamodb.tests import init_dynamodb_envs
 
 
 @pytest.fixture
@@ -14,11 +15,6 @@ def example_data():
         id='1',
         address='SOME_ADDRESS'
     )
-
-
-@pytest.fixture
-def example_repository(database):
-    return ExampleRepository(database)
 
 
 @pytest.fixture
@@ -39,14 +35,13 @@ def dynamodb_table_name():
 
 
 @pytest.fixture
-def init_dynamodb_config(monkeypatch):
-    monkeypatch.setenv('DOCUMENT_API_ENDPOINT', 'http://localhost:8000')
-    monkeypatch.setenv('AWS_ACCESS_KEY_ID', '12345')
-
-
-@pytest.fixture
-def database(init_dynamodb_config, dynamodb_table_name) -> DatabaseFacade:
+def database(init_dynamodb_envs, dynamodb_table_name) -> DatabaseFacade:
     return DatabaseFacade(
         Databases.DynamoDB,
         dynamodb_table_name,
     )
+
+
+@pytest.fixture
+def example_repository(database):
+    return ExampleRepository(database)
