@@ -42,6 +42,10 @@ class Asset(BaseModel):
         return hash(str(self))
 
 
+class LinkedAsset(Asset):
+    program_id: PositiveInt
+
+
 class ProgramData(BaseModel):
     program_name: StrictStr
     program_site: StrictStr

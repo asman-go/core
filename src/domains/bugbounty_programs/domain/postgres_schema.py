@@ -4,6 +4,7 @@ from sqlalchemy import (
     Boolean,
     Integer,
     ForeignKey,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -25,13 +26,18 @@ class TableProgram(TableBase):
 
     id = Column(Integer, primary_key=True)
     program_name = Column(String)
-    program_site = Column(String, primary_key=True)
+    program_site = Column(String)
     platform = Column(String)
     notes = Column(String)
 
     assets = relationship(
         'TableAsset',   # TableAsset — of python type associated with 'assets' table
         back_populates='program',  # program — field in TableAsset
+    )
+
+    __table_args__ = (
+        UniqueConstraint('program_site', name=f'uq_{TABLE_BUGBOUNTY_PROGRAM_NAME}_program_site'),
+        {'extend_existing': True}
     )
 
     @staticmethod
@@ -59,7 +65,7 @@ class TableAsset(TableBase):
     __tablename__ = TABLE_ASSET_NAME
 
     id = Column(Integer, primary_key=True)
-    value = Column(String, primary_key=True)
+    value = Column(String)
     # program_id = Column(ForeignKey(f'{TABLE_BUGBOUNTY_PROGRAM_NAME}.id'))
     program_id = Column(ForeignKey(TableProgram.id))
 
@@ -70,6 +76,11 @@ class TableAsset(TableBase):
     program = relationship(
         TableProgram,
         back_populates='assets',
+    )
+
+    __table_args__ = (
+        UniqueConstraint('value', 'type', 'program_id', name=f'uq_{TABLE_ASSET_NAME}_value_type'),
+        {'extend_existing': True}
     )
 
     @staticmethod

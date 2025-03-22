@@ -9,3 +9,6 @@ class DynamoDBConfig(BaseSettings):
     REGION_NAME: str = pydantic.Field(default="ru-central1")
     AWS_ACCESS_KEY_ID: str = pydantic.Field(default="<key-id>")
     AWS_SECRET_ACCESS_KEY: str = pydantic.Field(default="<secret-access-key>")
+    # Эти параметры нужны для DynamoDB базы?
+    # SQS_SERVER_ENDPOINT https://message-queue.api.cloud.yandex.net
+    # SQS_QUEUE_URL ...

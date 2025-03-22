@@ -36,7 +36,25 @@ def get_fields():
     print(fields & s)
 
 
+def basemodel_as_protocol():
+    class A(BaseModel):
+        a: str = Field()
+
+    class B(BaseModel):
+        b: str = Field()
+
+    def t(a: A):
+        if a.a == 'test':
+            print('basemodel_as_protocol', a.a)
+        else:
+            print('basemodel_as_protocol', 'fail')
+
+    a = A(a='test')
+    t(a)
+
+
 if __name__ == '__main__':
     # optional_fields()
     # basemodel_type_casting()
-    get_fields()
+    # get_fields()
+    basemodel_as_protocol()

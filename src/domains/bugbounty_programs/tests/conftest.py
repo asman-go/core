@@ -1,5 +1,10 @@
 import pytest
 
+from asman.core.adapters.db import DatabaseFacade, Databases
+from asman.domains.bugbounty_programs.domain import (
+    TABLE_ASSET_NAME,
+    TABLE_BUGBOUNTY_PROGRAM_NAME,
+)
 from asman.domains.bugbounty_programs.api import (
     Asset,
     AssetType,
@@ -20,6 +25,21 @@ from asman.domains.bugbounty_programs.use_cases import (
 )
 
 from asman.core.adapters.tests import db_in_memory, postgres, postgres_config
+from asman.core.adapters.db.postgresql import Postgres
+
+
+@pytest.fixture
+def init_postgres_envs(monkeypatch):
+    monkeypatch.setenv('POSTGRES_DB', 'my_db')
+    monkeypatch.setenv('POSTGRES_USER', 'my_user')
+    monkeypatch.setenv('POSTGRES_PASSWORD', 'my_password')
+    monkeypatch.setenv('POSTGRES_HOST', 'localhost')
+    monkeypatch.setenv('POSTGRES_PORT', '6432')
+
+
+@pytest.fixture
+def postgres_instance(init_postgres_envs) -> Postgres:
+    return Postgres()
 
 
 @pytest.fixture
