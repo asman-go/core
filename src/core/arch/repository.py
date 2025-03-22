@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
+from pydantic import BaseModel
 from typing import Optional, Sequence
 
 from asman.core.adapters.db import DatabaseFacade
-from asman.core.arch import Entity
 
 
 class AbstractRepository(ABC):
@@ -11,21 +11,21 @@ class AbstractRepository(ABC):
         ...
 
     @abstractmethod
-    def insert(self, entity: Entity) -> Optional[Entity]:
+    def insert(self, entities: Sequence[BaseModel]) -> Sequence[BaseModel]:
         ...
 
     @abstractmethod
-    def update(self, entity: Entity) -> Entity:
+    def update(self, entities: Sequence[BaseModel]) -> Sequence[BaseModel]:
         ...
 
     @abstractmethod
-    def get_by_id(self, entity_id) -> Optional[Entity]:
+    def search(self, filter: Sequence[BaseModel]) -> Sequence[BaseModel]:
         ...
 
     @abstractmethod
-    def delete(self, entity_id):
+    def delete(self, filter: Sequence[BaseModel]):
         ...
 
     @abstractmethod
-    def list(self) -> Optional[Sequence[Entity]]:
+    def list(self) -> Sequence[BaseModel]:
         ...

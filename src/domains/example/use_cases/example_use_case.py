@@ -11,7 +11,9 @@ from ..api.schema import Request
 class ExampleUseCase(AbstractUseCase):
     def __init__(self, config: Config) -> None:
         assert config.value == '123456'
-        self.repo = ExampleRepository(DatabaseFacade(Databases.DynamoDB), TABLE_NAME)
+        self.repo = ExampleRepository(
+            DatabaseFacade(Databases.DynamoDB, TABLE_NAME)
+        )
 
     def execute(self, request: Request):
         return request.data

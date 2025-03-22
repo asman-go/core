@@ -1,21 +1,28 @@
 from asman.domains.example.repo.example_repository import ExampleRepository
+from asman.domains.example.api import SearchFilter
 
 
-def test_example_repository_create(dynamodb, dynamodb_table_name):
-    repo = ExampleRepository(dynamodb, dynamodb_table_name)
+def test_example_repository_create(database):
+    repo = ExampleRepository(database)
 
     assert repo
     assert repo.database
 
 
-def test_example_repository_update(example_repository, example_entity):
-    updated_entity = example_repository.update(example_entity)
-    new_entity = example_repository.get_by_id(example_entity.id)
+def test_example_repository_crud(example_repository, example_data):
+    updated_entities = example_repository.update([example_data])
+    assert updated_entities
+    assert len(updated_entities) == 1
+    assert updated_entities[0].address == example_data.address
 
-    assert updated_entity
-    assert updated_entity.id == example_entity.id
-    assert updated_entity.address == example_entity.address
+    new_entities = example_repository.search([
+        SearchFilter(
+            id=updated_entities[0].id,
+        ),
+    ])
 
-    assert new_entity
-    assert new_entity.id == example_entity.id
-    assert new_entity.address == example_entity.address
+
+    assert new_entities
+    assert len(new_entities) == 1
+    assert new_entities[0].id == updated_entities[0].id
+    assert new_entities[0].address == example_data.address

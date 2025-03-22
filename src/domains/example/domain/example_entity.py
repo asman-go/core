@@ -1,16 +1,18 @@
-import pydantic
-
-from asman.core.arch import Entity
+from pydantic import BaseModel, Field, field_validator
 
 from .exceptions import ExampleException
 
 
-class ExampleEntity(Entity):
-    address: str
+class ExampleData(BaseModel):
+    id: str = Field()
+    address: str = Field()
 
-    @pydantic.field_validator('address')
+    @field_validator('address')
     def address_validator(cls, value):
         if len(value) < 3:
             raise ExampleException
 
         return value
+
+
+class ExampleEntity(ExampleData):...

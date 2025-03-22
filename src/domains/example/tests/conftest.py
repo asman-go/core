@@ -2,22 +2,23 @@ import pytest
 
 from asman.domains.example.domain.config import Config
 from asman.core.adapters.db import DatabaseFacade, Databases
-from asman.domains.example.domain.example_entity import ExampleEntity
+from asman.domains.example.domain.example_entity import ExampleData
 
 from asman.domains.example.domain import TABLE_NAME
 from asman.domains.example.repo.example_repository import ExampleRepository
 
 
 @pytest.fixture
-def example_entity():
-    return ExampleEntity(
+def example_data():
+    return ExampleData(
+        id='1',
         address='SOME_ADDRESS'
     )
 
 
 @pytest.fixture
-def example_repository(dynamodb, dynamodb_table_name):
-    return ExampleRepository(dynamodb, dynamodb_table_name)
+def example_repository(database):
+    return ExampleRepository(database)
 
 
 @pytest.fixture
@@ -44,8 +45,8 @@ def init_dynamodb_config(monkeypatch):
 
 
 @pytest.fixture
-def dynamodb(init_dynamodb_config) -> DatabaseFacade:
+def database(init_dynamodb_config, dynamodb_table_name) -> DatabaseFacade:
     return DatabaseFacade(
         Databases.DynamoDB,
-        TABLE_NAME,
+        dynamodb_table_name,
     )

@@ -1,12 +1,13 @@
 import pytest
 
-from asman.domains.example.domain.example_entity import ExampleEntity
-from asman.domains.example.domain.exceptions import ExampleException
+from asman.domains.example.domain import ExampleData
+from asman.domains.example.domain import ExampleException
 
 
-def test_example_entity_create():
+def test_example_data_create():
     ADDRESS_VALUE = '123456'
-    entity = ExampleEntity(
+    entity = ExampleData(
+        id='1',
         address=ADDRESS_VALUE
     )
 
@@ -15,9 +16,10 @@ def test_example_entity_create():
     assert entity.address == ADDRESS_VALUE
 
 
-def test_example_entity_create_throws_example_exception():
+def test_example_data_create_throws_example_exception():
     with pytest.raises(ExampleException) as exc:
-        ExampleEntity(
+        ExampleData(
+            id='1',
             address='1'
         )
 
