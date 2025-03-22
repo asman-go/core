@@ -1,76 +1,15 @@
 from botocore.exceptions import ClientError
 import pytest
-import pydantic
+from pydantic import TypeAdapter
 
 from asman.core.adapters.db.dynamodb import (
     DynamoDB,
-    TableBase,
-
-    Key,
-    AttributeDefinition,
-    ProvisionedThroughput,
 )
-
-
-TABLE_NAME = 'table_debug'
-
-
-class Item(pydantic.BaseModel):
-    model_config = {"frozen": True}
-    item: str = pydantic.Field()
-    name: str = pydantic.Field()
-    debug: bool = pydantic.Field(default=False)
-
-    def __eq__(self, value):
-        return isinstance(value, Item) and self.item == value.item and self.name == value.name
-
-    def __hash__(self):
-        return hash(str(
-            {
-                "item": self.item,
-                "name": self.name,
-            }
-        ))
-
-
-class TableDebug(TableBase):
-    table_name = TABLE_NAME
-    key_schema = [
-        Key(
-            AttributeName='item',
-            KeyType='HASH'
-        ),
-        Key(
-            AttributeName='name',
-            KeyType='RANGE'
-        ),
-    ]
-    attribute_definitions = [
-        AttributeDefinition(
-            AttributeName='item',
-            AttributeType='S',
-        ),
-        AttributeDefinition(
-            AttributeName='name',
-            AttributeType='S',
-        ),
-        # AttributeDefinition(
-        #     AttributeName='debug',
-        #     AttributeType='N',
-        # ),
-    ]
-    provisioned_throughput = ProvisionedThroughput()
-
-
-@pytest.fixture
-def init_dynamodb_envs(monkeypatch):
-    monkeypatch.setenv('DOCUMENT_API_ENDPOINT', 'http://localhost:8000')
-    monkeypatch.setenv('AWS_ACCESS_KEY_ID', '12345')
-
-
-@pytest.fixture
-def dynamodb_instance(init_dynamodb_envs) -> DynamoDB:
-    return DynamoDB()
+from asman.core.adapters.db.dynamodb.tests import (
+    TABLE_NAME,
+    Item,
+    TableDebug,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -98,7 +37,7 @@ def test_crud(dynamodb_instance):
 
     assert found, 'Не получили данные из таблицы ' + TABLE_NAME
 
-    _items = pydantic.TypeAdapter(list[Item]).validate_python(found)
+    _items = TypeAdapter(list[Item]).validate_python(found)
     
     assert _items, 'Данные из таблицы не десериализовались в Item объект'
     assert len(_items) == len(items), 'Количество элементов не совпало'
@@ -113,7 +52,7 @@ def test_crud(dynamodb_instance):
     assert found, f'Не нашли элемент {item1}'
     assert len(found) == 1, 'Ищем по ключу, должен быть один элемент'
 
-    _item = pydantic.TypeAdapter(Item).validate_python(found[0])
+    _item = TypeAdapter(Item).validate_python(found[0])
 
     assert _item, 'Данные из таблицы не десериализовались в Item объект'
     assert _item == item1
