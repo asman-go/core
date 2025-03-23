@@ -3,8 +3,8 @@ from typing import List
 from asman.core.arch import AbstractUseCase
 from asman.core.adapters.db import DatabaseFacade, Databases
 
-from asman.domains.domains.repo import DomainRepository
-from asman.domains.domains.domain import TABLE_DOMAINS_NAME
+from asman.domains.services.repo import DomainRepository
+from asman.domains.services.domain import TABLE_DOMAINS_NAME
 from asman.core.adapters.clients.facebook import (
     FacebookConfig,
     FacebookGraph,

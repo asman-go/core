@@ -5,12 +5,12 @@ from asman.core.adapters.db import DatabaseFacade, Databases
 from asman.core.adapters.db.tests import postgres_facade
 from asman.core.adapters.db.postgresql.tests import init_postgres_envs, postgres_instance
 
-from asman.domains.domains.api import NewCertificateEvent
-from asman.domains.domains.repo import DomainRepository
-from asman.domains.domains.use_cases import (
+from asman.domains.services.api import NewCertificateEvent
+from asman.domains.services.repo import DomainRepository
+from asman.domains.services.use_cases import (
     DomainsFromCertsUseCase,
 )
-from asman.domains.domains.domain import TABLE_DOMAINS_NAME
+from asman.domains.services.domain import TABLE_DOMAINS_NAME
 
 
 @pytest.fixture

@@ -40,8 +40,8 @@ example = [
 bugbounty_programs = [
     "src/domains/bugbounty_programs/requirements.txt",
 ]
-domains = [
-    "src/domains/domains/requirements.txt",
+services = [
+    "src/domains/services/requirements.txt",
 ]
 # all = ["requirements-all.txt"]
 
@@ -79,7 +79,7 @@ only-include = [
 
     "src/domains/bugbounty_programs",
     "src/domains/example",
-    "src/domains/domains",
+    "src/domains/services",
 ]
 
 [tool.hatch.build.targets.wheel.sources]
@@ -87,7 +87,7 @@ only-include = [
 "src/tasks" = "asman/tasks"
 "src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"
 "src/domains/example" = "asman/domains/example"
-"src/domains/domains" = "asman/domains/domains"
+"src/domains/services" = "asman/domains/services"
 
 # Environments
 # [tool.hatch.envs.default]

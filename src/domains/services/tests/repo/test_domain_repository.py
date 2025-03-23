@@ -1,7 +1,7 @@
 import pytest
 
-from asman.domains.domains.repo import DomainRepository
-from asman.domains.domains.api import SearchByDomain, SearchByParentDomain
+from asman.domains.services.repo import DomainRepository
+from asman.domains.services.api import SearchByDomain, SearchByParentDomain
 
 
 @pytest.mark.asyncio

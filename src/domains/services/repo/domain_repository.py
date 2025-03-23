@@ -5,12 +5,12 @@ from asman.core.adapters.db import DatabaseFacade
 from asman.core.arch import AbstractRepository
 from asman.core.exceptions import NotImplementedException
 
-from asman.domains.domains.api import Domain, SearchByDomain, SearchByParentDomain
-from asman.domains.domains.domain import (
+from asman.domains.services.api import Domain, SearchByDomain, SearchByParentDomain
+from asman.domains.services.domain import (
     TableDomain,
     TABLE_DOMAINS_NAME,
 )
-from asman.domains.domains.utils import filter_domains
+from asman.domains.services.utils import filter_domains
 
 
 class DomainRepository(AbstractRepository):

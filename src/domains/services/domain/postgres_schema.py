@@ -1,7 +1,7 @@
 from asman.core.adapters.db.postgresql import TableBase
 from sqlalchemy import Column, String
 from sqlalchemy.schema import PrimaryKeyConstraint
-from asman.domains.domains.api import Domain
+from asman.domains.services.api import Domain
 
 
 TABLE_DOMAINS_NAME = 'ctdomains'

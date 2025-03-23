@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from asman.domains.domains.api import Domain, IncorrectDomainException
+from asman.domains.services.api import Domain, IncorrectDomainException
 
 
 def filter_domains(entities: Dict[str, List[str]]) -> List[Domain]:

@@ -1,8 +1,8 @@
 import pytest
 import pydantic
 
-from asman.domains.domains.api.exceptions import WrongEventTypeException
-from asman.domains.domains.api.schema import (
+from asman.domains.services.api.exceptions import WrongEventTypeException
+from asman.domains.services.api.schema import (
     NewCertificateEvent,
     FacebookCtEvent,
     FACEBOOK_EVENT,

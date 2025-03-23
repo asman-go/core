@@ -3,12 +3,12 @@ from functools import reduce
 from asman.core.arch import AbstractUseCase
 from asman.core.adapters.db import DatabaseFacade, Databases
 
-from asman.domains.domains.api import (
+from asman.domains.services.api import (
     FacebookCtEvent,
 )
-from asman.domains.domains.repo import DomainRepository
-from asman.domains.domains.utils import join
-from asman.domains.domains.domain import TABLE_DOMAINS_NAME
+from asman.domains.services.repo import DomainRepository
+from asman.domains.services.utils import join
+from asman.domains.services.domain import TABLE_DOMAINS_NAME
 
 
 class NewCtEventUseCase(AbstractUseCase):
