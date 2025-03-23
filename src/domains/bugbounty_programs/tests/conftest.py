@@ -1,4 +1,5 @@
 import pytest
+from typing import Sequence
 
 from asman.core.adapters.db import DatabaseFacade, Databases
 from asman.domains.bugbounty_programs.domain import (
@@ -8,7 +9,8 @@ from asman.domains.bugbounty_programs.domain import (
 from asman.domains.bugbounty_programs.api import (
     Asset,
     AssetType,
-    ProgramData,
+    NewProgram,
+    NewAsset,
 )
 from asman.domains.bugbounty_programs.repo import (
     AssetRepository,
@@ -24,56 +26,52 @@ from asman.domains.bugbounty_programs.use_cases import (
     UpdateProgramUseCase,
 )
 
-from asman.core.adapters.tests import db_in_memory, postgres, postgres_config
-from asman.core.adapters.db.postgresql import Postgres
 from asman.core.adapters.db import DatabaseFacade, Databases
+from asman.core.adapters.db.tests import postgres_facade
 from asman.core.adapters.db.postgresql.tests import init_postgres_envs
 
 
 @pytest.fixture
-def postgres_facade(init_postgres_envs) -> DatabaseFacade:
-    return DatabaseFacade(Databases.PostgreSQL)
-
-@pytest.fixture
-def init_postgres_envs(monkeypatch):
-    monkeypatch.setenv('POSTGRES_DB', 'my_db')
-    monkeypatch.setenv('POSTGRES_USER', 'my_user')
-    monkeypatch.setenv('POSTGRES_PASSWORD', 'my_password')
-    monkeypatch.setenv('POSTGRES_HOST', 'localhost')
-    monkeypatch.setenv('POSTGRES_PORT', '6432')
+def database(postgres_facade) -> DatabaseFacade:
+    return postgres_facade
 
 
 @pytest.fixture
-def postgres_instance(init_postgres_envs) -> Postgres:
-    return Postgres()
+def program_table_name() -> str:
+    return TABLE_BUGBOUNTY_PROGRAM_NAME
 
 
 @pytest.fixture
-def asset_repository(db_in_memory):
-    return AssetRepository(db_in_memory)
+def asset_table_name() -> str:
+    return TABLE_ASSET_NAME
 
 
 @pytest.fixture
-def program_repository(db_in_memory):
-    return ProgramRepository(db_in_memory)
+def asset_repository(database, asset_table_name):
+    return AssetRepository(database, asset_table_name)
 
 
 @pytest.fixture
-def assets():
+def program_repository(database, program_table_name):
+    return ProgramRepository(database, program_table_name)
+
+
+@pytest.fixture
+def new_assets() -> Sequence[NewAsset]:
     return [
-        Asset(
+        NewAsset(
             value='example.com',
             type=AssetType.ASSET_WEB,
             in_scope=True,
             is_paid=False,
         ),
-        Asset(
+        NewAsset(
             value='192.168.0.1',
             type=AssetType.ASSET_IP,
             in_scope=True,
             is_paid=True,
         ),
-        Asset(
+        NewAsset(
             value='https://api.example.com/',
             type=AssetType.ASSET_API,
             in_scope=False,
@@ -83,57 +81,55 @@ def assets():
 
 
 @pytest.fixture
-def program_data(assets):
-    return ProgramData(
+def new_program() -> NewProgram:
+    return NewProgram(
         program_name='NewProgram',
         program_site='https://example.com/program',
         platform='h1',
-        assets=assets,
         notes='Some notes'
     )
 
 
 @pytest.fixture
-def program_data_other(assets):
-    return ProgramData(
+def new_program_other() -> NewProgram:
+    return NewProgram(
         program_name='NewProgram',
         program_site='https://example.com/program1',
         platform='h1',
-        assets=assets,
         notes='Some notes'
     )
 
 
 @pytest.fixture
-def add_assets_use_case(postgres_config):
-    return AddAssetsUseCase(None, postgres_config)
+def add_assets_use_case(init_postgres_envs):
+    return AddAssetsUseCase()
 
 
 @pytest.fixture
-def remove_assets_use_case(postgres_config):
-    return RemoveAssetsUseCase(None, postgres_config)
+def remove_assets_use_case(init_postgres_envs):
+    return RemoveAssetsUseCase()
 
 
 @pytest.fixture
-def create_program_use_case(postgres_config):
-    return CreateProgramUseCase(None, postgres_config)
+def create_program_use_case(init_postgres_envs):
+    return CreateProgramUseCase()
 
 
 @pytest.fixture
-def delete_program_use_case(postgres_config):
-    return DeleteProgramUseCase(None, postgres_config)
+def delete_program_use_case(init_postgres_envs):
+    return DeleteProgramUseCase()
 
 
 @pytest.fixture
-def read_program_use_case(postgres_config):
-    return ReadProgramUseCase(None, postgres_config)
+def read_program_use_case(init_postgres_envs):
+    return ReadProgramUseCase()
 
 
 @pytest.fixture
-def read_program_by_id_use_case(postgres_config):
-    return ReadProgramByIdUseCase(None, postgres_config)
+def read_program_by_id_use_case(init_postgres_envs):
+    return ReadProgramByIdUseCase()
 
 
 @pytest.fixture
-def update_program_use_case(postgres_config):
-    return UpdateProgramUseCase(None, postgres_config)
+def update_program_use_case(init_postgres_envs):
+    return UpdateProgramUseCase()

@@ -1,68 +1,61 @@
 import pytest
 
 from asman.domains.bugbounty_programs.repo import ProgramRepository
+from asman.domains.bugbounty_programs.api import SearchByID
+from asman.domains.bugbounty_programs.domain import TableProgram
 
 
-def test_program_repository_instance_create(db_in_memory):
-    repo = ProgramRepository(db_in_memory)
+def test_program_repository_instance_create(database, program_table_name):
+    repo = ProgramRepository(database, program_table_name)
 
     assert repo, 'No repo in ProgramRepository'
+    assert repo.database
+    assert repo.table_name == program_table_name
 
 
 @pytest.mark.asyncio
-async def test_program_repository_insert(program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
-    program = await program_repository.get_by_id(program_id)
+async def test_program_repository_crud(program_repository, new_program, new_program_other):
+    # Проверяем добавление программы
+    ids = await program_repository.insert([new_program])
 
-    assert program_id, 'No id program after data insert'
-    assert program, 'Inserted program not found'
-    assert isinstance(program_id, int), 'Wrong id program type'
+    assert ids and len(ids) == 1
 
+    # Проверяем поиск по фильтру
+    search_filter = [
+        SearchByID(id=ids[0].program_id),
+    ]
+    programs = await program_repository.search(search_filter)
 
-@pytest.mark.asyncio
-async def test_program_repository_update(program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
-    program = await program_repository.get_by_id(program_id)
-    OLD_VALUE = program.data.notes
-    program.data.notes += 'UPDATED'
-    updated_program = await program_repository.update(program)
+    assert programs and len(programs) == 1
+    inserted_program = programs[0]
+    assert inserted_program == new_program
 
-    assert updated_program, 'Updated program not found'
-    assert updated_program.id == program_id, 'Inserted and updated programs\' ids are not same'
-    assert updated_program.data.notes == OLD_VALUE + 'UPDATED'
+    # Проверяем, что при добавлении той же программы, поле будет обновлено у уже существующей
+    _new_program = new_program.model_copy(
+        update={'notes': 'NEW_VALUE'},
+        deep=True,
+    )
+    ids = await program_repository.insert([_new_program])
 
+    assert ids[0].program_id == inserted_program.id
 
-@pytest.mark.asyncio
-async def test_program_repository_get_by_id(program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
-    program = await program_repository.get_by_id(program_id)
+    programs = await program_repository.search(search_filter)
 
-    assert program, 'Program not found'
-    assert program.id == program_id, 'Wrong program id'
-    assert program.data.program_name == program_data.program_name, 'Wrong program name'
+    assert programs[0].notes == 'NEW_VALUE'
+    assert programs[0].notes != new_program.notes
 
+    # Обновляем данные, но через update
+    ids = await program_repository.update([inserted_program])
+    assert ids[0].program_id == inserted_program.id
+    programs = await program_repository.search(search_filter)
+    assert programs[0].notes == new_program.notes
 
-@pytest.mark.asyncio
-async def test_program_repository_list(program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
+    # Проверяем, что можем получить все объекты
+    await program_repository.insert([new_program_other])
     programs = await program_repository.list()
+    assert programs and len(programs) == 2
 
-    assert programs, 'Programs not found'
-    assert isinstance(programs, list), 'Wrong programs type'
-    assert len(programs) > 0, 'Wrong programs amount'
-
-
-@pytest.mark.asyncio
-async def test_program_repository_delete(asset_repository, program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
-    program = await program_repository.get_by_id(program_id)
-
-    await program_repository.delete(program_id)
-    deleted_program = await program_repository.get_by_id(program_id)
-
-    assets = await asset_repository.list(program_id)
-
-    assert program_id, 'ProgramData was not inserted'
-    assert program, 'Can not find the inserted program'
-    assert not deleted_program, 'The program was not deleted'
-    assert len(assets) == 0, 'Assets were not deleted'
+    # Проверяем удаление объектов
+    ids = await program_repository.delete(search_filter)
+    assert ids and len(ids) == 1
+    assert ids[0].program_id == search_filter[0].id

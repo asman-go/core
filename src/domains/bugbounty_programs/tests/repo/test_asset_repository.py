@@ -2,41 +2,50 @@ import pytest
 
 from asman.domains.bugbounty_programs.api import (
     Asset,
+    NewLinkedAsset,
     AssetType,
 )
 from asman.domains.bugbounty_programs.repo import AssetRepository
 
 
-def test_asset_repository_instance_create(db_in_memory):
-    repo = AssetRepository(db_in_memory)
+def test_asset_repository_instance_create(database, asset_table_name):
+    repo = AssetRepository(database, asset_table_name)
 
     assert repo
+    assert repo.database
+    assert repo.table_name == asset_table_name
 
 
 @pytest.fixture
-async def programId(program_repository, program_data):
-    program_id = await program_repository.insert(program_data)
-    return program_id
+async def program_id(program_repository, new_program):
+    ids = await program_repository.insert([new_program])
+
+    return ids[0].program_id
 
 
 @pytest.mark.asyncio
-async def test_asset_repository_insert_and_list(programId, assets, asset_repository):
-    programId = await programId
-    await asset_repository.insert(programId, assets)
+async def test_asset_repository_crud(asset_repository, new_assets, program_id):
+    _program_id = await program_id
+    ids = await asset_repository.insert(list(
+        map(
+            lambda new_asset: NewLinkedAsset(
+                program_id=_program_id,
+                **new_asset.model_dump(),
+            ),
+            new_assets,
+        )
+    ))
 
-    all_assets = await asset_repository.list(programId)
+    assert ids and len(ids) == len(new_assets)
 
-    assert all_assets, 'No assets were added'
-    assert isinstance(all_assets, list), 'Wrong assets\' type'
-    assert len(all_assets) >= len(assets), 'Wrong assets\' amount'
+    assets = await asset_repository.search(ids)
+    assert assets and len(assets) == len(new_assets)
 
+    for asset in assets:
+        assert asset in new_assets
 
-@pytest.mark.asyncio
-async def test_asset_repository_delete(programId, assets, asset_repository):
-    programId = await programId
-    await asset_repository.insert(programId, assets)
-    old_all_assets = await asset_repository.list(programId)
-    await asset_repository.delete(programId, assets)
-    new_all_assets = await asset_repository.list(programId)
+    assets = await asset_repository.list()
+    assert assets and len(assets) == len(new_assets)
 
-    assert len(new_all_assets) < len(old_all_assets), 'There are more assets left than expected'
+    ids = await asset_repository.delete([ids[0]])
+    assert ids and len(ids) == 1

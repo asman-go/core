@@ -14,7 +14,6 @@ from asman.domains.bugbounty_programs.api import (
     Asset,
     AssetType,
     Program,
-    ProgramData,
 )
 
 TABLE_ASSET_NAME = 'assets'
@@ -24,7 +23,7 @@ TABLE_BUGBOUNTY_PROGRAM_NAME = 'programs'
 class TableProgram(TableBase):
     __tablename__ = TABLE_BUGBOUNTY_PROGRAM_NAME
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     program_name = Column(String)
     program_site = Column(String)
     platform = Column(String)
@@ -42,29 +41,19 @@ class TableProgram(TableBase):
 
     @staticmethod
     def convert(item: 'TableProgram') -> Program:
-        assets = list(
-            map(
-                lambda asset: TableAsset.convert(asset),
-                item.assets
-            )
-        )
-
         return Program(
             id=item.id,
-            data=ProgramData(
-                program_name=item.program_name,
-                program_site=item.program_site,
-                platform=item.platform,
-                assets=assets,
-                notes=item.notes,
-            ),
+            program_name=item.program_name,
+            program_site=item.program_site,
+            platform=item.platform,
+            notes=item.notes,
         )
 
 
 class TableAsset(TableBase):
     __tablename__ = TABLE_ASSET_NAME
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     value = Column(String)
     # program_id = Column(ForeignKey(f'{TABLE_BUGBOUNTY_PROGRAM_NAME}.id'))
     program_id = Column(ForeignKey(TableProgram.id))
@@ -86,6 +75,7 @@ class TableAsset(TableBase):
     @staticmethod
     def convert(item: 'TableAsset') -> Asset:
         return Asset(
+            id=item.id,
             value=item.value,
             type=AssetType(item.type),
             in_scope=item.in_scope,

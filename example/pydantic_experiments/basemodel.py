@@ -53,8 +53,26 @@ def basemodel_as_protocol():
     t(a)
 
 
+def inheritance():
+    class A(BaseModel):
+        a: str
+
+        def __eq__(self, value: 'A'):
+            print('Вот так')
+            return self.a == value.a
+
+    class B(A):
+        b: str
+
+    a = B(a='1', b='2')
+    b = B(a='2', b='2')
+
+    print('Как сравниваются объекты с наследованием?', a == b)
+
+
 if __name__ == '__main__':
     # optional_fields()
     # basemodel_type_casting()
     # get_fields()
-    basemodel_as_protocol()
+    # basemodel_as_protocol()
+    inheritance()
