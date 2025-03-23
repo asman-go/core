@@ -19,6 +19,8 @@ from asman.domains.bugbounty_programs.repo import (
 from asman.domains.bugbounty_programs.use_cases import (
     AddAssetsUseCase,
     RemoveAssetsUseCase,
+    GetAssetsUseCase,
+
     DeleteProgramUseCase,
     CreateProgramUseCase,
     ReadProgramUseCase,
@@ -110,6 +112,11 @@ def new_program_other() -> NewProgram:
 @pytest.fixture
 def add_assets_use_case(init_postgres_envs):
     return AddAssetsUseCase()
+
+
+@pytest.fixture
+def get_assets_use_case(init_postgres_envs):
+    return GetAssetsUseCase()
 
 
 @pytest.fixture

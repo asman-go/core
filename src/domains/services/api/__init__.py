@@ -9,6 +9,7 @@ from .schema import (
 )
 from .exceptions import WrongEventTypeException, IncorrectDomainException
 from .pem import get_domains_from_certificate
+from .utils import check_domain
 
 
 __all__ = [
@@ -24,4 +25,6 @@ __all__ = [
     Domain,
     SearchByDomain,
     SearchByParentDomain,
+
+    check_domain,
 ]
