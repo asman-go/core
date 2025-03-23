@@ -24,4 +24,4 @@ def test_example_use_case_execute(example_use_case, init_dynamodb_envs):
 
     response = example_use_case.execute(request)
 
-    assert response == request.data
+    assert response.data == request.data

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from typing import Optional
 
@@ -9,5 +10,5 @@ class AbstractUseCase(ABC):
         ...
 
     @abstractmethod
-    def execute(self, request):
+    def execute(self, request) -> Optional[BaseModel]:
         ...

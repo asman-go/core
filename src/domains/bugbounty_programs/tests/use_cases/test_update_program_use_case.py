@@ -1,36 +1,32 @@
-import copy
 import pytest
+import pytest_asyncio
 
-from asman.domains.bugbounty_programs.api import Program
+from asman.domains.bugbounty_programs.api import Program, SearchByID
 from asman.domains.bugbounty_programs.use_cases import UpdateProgramUseCase
 
 
-def test_update_program_use_case_instance_create():
-    update_use_case = UpdateProgramUseCase(None, None)
+@pytest_asyncio.fixture
+async def program_id(program_repository, new_program):
+    ids = await program_repository.insert([new_program])
 
-    assert update_use_case, 'Use case is not created'
-    assert update_use_case.repo, 'Repo property not found'
+    return ids[0].program_id
 
 
 @pytest.mark.asyncio
 async def test_update_program_use_case_execute(
-            create_program_use_case,
-            update_program_use_case,
-            program_data
+            update_program_use_case: UpdateProgramUseCase,
+            program_repository,
+            program_id,
         ):
 
-    program_id = await create_program_use_case.execute(program_data)
+    programs = await program_repository.search([SearchByID(id=program_id)])
+    program = programs[0]
+    program_to_update = program.model_copy(deep=True)
+    program_to_update.program_name = 'SOME_NEW_VALUE'
 
-    copy_program_data = copy.deepcopy(program_data)
-    copy_program_data.program_name = 'SOME_NEW_VALUE'
+    _updated_program_id = await update_program_use_case.execute(program_to_update)
+    programs = await program_repository.search([SearchByID(id=program_id)])
 
-    updated_program = await update_program_use_case.execute(
-        Program(
-            id=program_id,
-            data=copy_program_data,
-        )
-    )
-
-    assert updated_program
-    assert updated_program.id == program_id
-    assert updated_program.data.program_name == 'SOME_NEW_VALUE'
+    assert _updated_program_id
+    assert _updated_program_id.program_id == program_to_update.id
+    assert programs[0].program_name == 'SOME_NEW_VALUE'

@@ -28,7 +28,7 @@ from asman.domains.bugbounty_programs.use_cases import (
 
 from asman.core.adapters.db import DatabaseFacade, Databases
 from asman.core.adapters.db.tests import postgres_facade
-from asman.core.adapters.db.postgresql.tests import init_postgres_envs
+from asman.core.adapters.db.postgresql.tests import init_postgres_envs, postgres_instance
 
 
 @pytest.fixture
@@ -54,6 +54,13 @@ def asset_repository(database, asset_table_name):
 @pytest.fixture
 def program_repository(database, program_table_name):
     return ProgramRepository(database, program_table_name)
+
+
+@pytest.fixture(autouse=True)
+def clear_tables(postgres_instance):
+    # Перед каждым тестом очищаем таблицы
+    postgres_instance.delete_all(TABLE_ASSET_NAME)
+    postgres_instance.delete_all(TABLE_BUGBOUNTY_PROGRAM_NAME)
 
 
 @pytest.fixture

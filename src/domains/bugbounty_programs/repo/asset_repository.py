@@ -6,7 +6,7 @@ from asman.core.arch import AbstractRepository
 from asman.core.exceptions import NotImplementedException
 
 from asman.domains.bugbounty_programs.domain import TableAsset, TABLE_ASSET_NAME
-from asman.domains.bugbounty_programs.api import NewLinkedAsset, LinkedAsset, Asset, AssetId
+from asman.domains.bugbounty_programs.api import NewLinkedAsset, LinkedAsset, Asset, AssetId, ProgramId
 
 
 class AssetRepository(AbstractRepository):
@@ -49,7 +49,7 @@ class AssetRepository(AbstractRepository):
             )
         )
 
-    async def delete(self, filter: Sequence[AssetId]):
+    async def delete(self, filter: Sequence[AssetId] | Sequence[ProgramId]):
         ids = self.database.delete(self.table_name, filter)
 
         return list(

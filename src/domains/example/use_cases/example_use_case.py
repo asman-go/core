@@ -4,6 +4,7 @@ from asman.core.adapters.db import DatabaseFacade, Databases
 from ..domain.config import Config
 from ..repo.example_repository import ExampleRepository
 
+from asman.domains.example.api import Request, Response
 from ..api.schema import Request
 from asman.domains.example.domain import TABLE_NAME
 
@@ -16,5 +17,6 @@ class ExampleUseCase(AbstractUseCase):
             TABLE_NAME,
         )
 
-    def execute(self, request: Request):
-        return request.data
+    def execute(self, request: Request) -> Response:
+        return Response(data=request.data)
+

@@ -1,34 +1,49 @@
 import pytest
+import pytest_asyncio
 
 from asman.domains.bugbounty_programs.use_cases import RemoveAssetsUseCase
-from asman.domains.bugbounty_programs.api import RemoveAssetsRequest, AddAssetsRequest
+from asman.domains.bugbounty_programs.api import ProgramId, NewLinkedAsset
 
 
-def test_remove_assets_use_case_create_instance():
-    use_case = RemoveAssetsUseCase(None, None)
+@pytest_asyncio.fixture
+async def program_id(program_repository, new_program) -> ProgramId:
+    ids = await program_repository.insert([new_program])
 
-    assert use_case, 'Use case is not created'
-    assert use_case.repo, 'Repo property not found'
+    return ids[0]
 
 
 @pytest.mark.asyncio
-async def test_remove_assets_use_case_execute(read_program_by_id_use_case, create_program_use_case, add_assets_use_case, remove_assets_use_case, program_data, assets):
-    program_id = await create_program_use_case.execute(program_data)
-    await add_assets_use_case.execute(
-        AddAssetsRequest(
-            program_id=program_id,
-            assets=assets
+async def test_remove_assets_use_case_execute(remove_assets_use_case: RemoveAssetsUseCase, program_id: ProgramId, asset_repository, new_assets):
+    ids = await asset_repository.insert(list(
+        map(
+            lambda new_asset: NewLinkedAsset(
+                program_id=program_id.program_id,
+                **new_asset.model_dump(),
+            ),
+            new_assets,
         )
-    )
-    await remove_assets_use_case.execute(
-        RemoveAssetsRequest(
-            program_id=program_id,
-            assets=[assets[0]]
-        )
-    )
+    ))
 
-    program = await read_program_by_id_use_case.execute(program_id)
-    assert assets[0] not in program.data.assets
+    asset_id1 = ids[0]
 
-    for asset in assets[1:]:
-        assert asset in program.data.assets
+    # Удаляем 1 ассет
+    removed_asset_ids = await remove_assets_use_case.execute(asset_id1)
+
+    assert removed_asset_ids and len(removed_asset_ids) == 1
+    assert removed_asset_ids[0].id == asset_id1.id
+
+    # Удаляем все ассеты по program id
+    removed_asset_ids = await remove_assets_use_case.execute(program_id)
+    assert removed_asset_ids and len(removed_asset_ids) > 1
+
+    # Пробую удалить ассет, которого нет
+    removed_asset_ids = await remove_assets_use_case.execute(asset_id1)
+    assert len(removed_asset_ids) == 0
+
+    # Пробую удалить ассеты по программе, для которой нет ассетов
+    removed_asset_ids = await remove_assets_use_case.execute(program_id)
+    assert len(removed_asset_ids) == 0
+
+    # Пробую удалить ассеты по несуществующей программе
+    removed_asset_ids = await remove_assets_use_case.execute(ProgramId(program_id=1241234512))
+    assert len(removed_asset_ids) == 0

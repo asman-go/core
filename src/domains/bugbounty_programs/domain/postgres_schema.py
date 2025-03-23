@@ -29,10 +29,10 @@ class TableProgram(TableBase):
     platform = Column(String)
     notes = Column(String)
 
-    assets = relationship(
-        'TableAsset',   # TableAsset — of python type associated with 'assets' table
-        back_populates='program',  # program — field in TableAsset
-    )
+    # assets = relationship(
+    #     'TableAsset',   # TableAsset — of python type associated with 'assets' table
+    #     back_populates='program',  # program — field in TableAsset
+    # )
 
     __table_args__ = (
         UniqueConstraint('program_site', name=f'uq_{TABLE_BUGBOUNTY_PROGRAM_NAME}_program_site'),
@@ -62,10 +62,10 @@ class TableAsset(TableBase):
     in_scope = Column(Boolean)
     is_paid = Column(Boolean)
 
-    program = relationship(
-        TableProgram,
-        back_populates='assets',
-    )
+    # program = relationship(
+    #     TableProgram,
+    #     back_populates='assets',
+    # )
 
     __table_args__ = (
         UniqueConstraint('value', 'type', 'program_id', name=f'uq_{TABLE_ASSET_NAME}_value_type'),

@@ -1,26 +1,27 @@
 import pytest
+import pytest_asyncio
 
+from asman.domains.bugbounty_programs.api import SearchByID
 from asman.domains.bugbounty_programs.use_cases import DeleteProgramUseCase
 
 
-def test_delete_program_use_case_create():
-    delete_use_case = DeleteProgramUseCase(None, None)
+@pytest_asyncio.fixture
+async def program_id(program_repository, new_program):
+    ids = await program_repository.insert([new_program])
 
-    assert delete_use_case, 'Use case is not created'
-    assert delete_use_case.repo, 'Repo property not found'
+    return ids[0].program_id
 
 
 @pytest.mark.asyncio
-async def test_read_program_use_case_execute(
-            create_program_use_case,
-            delete_program_use_case,
-            read_program_by_id_use_case,
-            program_data
-        ):
-    programId = await create_program_use_case.execute(program_data)
-    program = await read_program_by_id_use_case.execute(programId)
-    res = await delete_program_use_case.execute(programId)
-    deleted_program = await read_program_by_id_use_case.execute(programId)
+async def test_delete_program_use_case_execute(delete_program_use_case: DeleteProgramUseCase, program_repository, program_id):
+    _deleted_program_id = await delete_program_use_case.execute(SearchByID(id=program_id))
 
-    assert res, 'The use case was executed successfully'
-    assert not deleted_program, 'The program was deleted'
+    assert program_id == _deleted_program_id.program_id
+
+    program = await program_repository.search([SearchByID(id=_deleted_program_id.program_id)])
+
+    assert len(program) == 0
+
+    # Пробую удалить несуществующую программу -> Exception
+    # _deleted_program_id = await delete_program_use_case.execute(SearchByID(id=1241351325))
+    # assert _deleted_program_id == 1

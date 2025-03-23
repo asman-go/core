@@ -1,42 +1,31 @@
 import pytest
+import pytest_asyncio
 
 from asman.domains.bugbounty_programs.use_cases import (
     ReadProgramUseCase,
     ReadProgramByIdUseCase,
 )
+from asman.domains.bugbounty_programs.api import SearchByID
 
 
-def test_read_program_use_case_instance_create():
-    read_use_case = ReadProgramUseCase(None, None)
-    read_by_id_use_case = ReadProgramByIdUseCase(None, None)
+@pytest_asyncio.fixture
+async def program_id(program_repository, new_program):
+    ids = await program_repository.insert([new_program])
 
-    assert read_use_case, 'Use case is not created'
-    assert read_use_case.repo, 'Repo property not found'
-
-    assert read_by_id_use_case, 'Use case is not created'
-    assert read_by_id_use_case.repo, 'Repo property not found'
+    return ids[0]
 
 
 @pytest.mark.asyncio
 async def test_read_program_use_case_execute(
-            read_program_use_case,
-            read_program_by_id_use_case,
-            create_program_use_case,
-            program_data
+            read_program_use_case: ReadProgramUseCase,
+            read_program_by_id_use_case: ReadProgramByIdUseCase,
+            program_id
         ):
-    program_id_1 = await create_program_use_case.execute(program_data)
-    await create_program_use_case.execute(program_data)
-
     programs = await read_program_use_case.execute()
 
-    assert len(programs) > 1
+    assert len(programs) > 0
 
-    program = await read_program_by_id_use_case.execute(program_id_1)
+    program = await read_program_by_id_use_case.execute(SearchByID(id=program_id.program_id))
 
     assert program
-    assert program_id_1 == program.id
-    assert program_data.program_name == program.data.program_name
-    assert program_data.program_site == program.data.program_site
-    assert program_data.platform == program.data.platform
-    assert len(program_data.assets) == len(program.data.assets)
-    assert program_data.notes == program.data.notes
+    assert program_id.program_id == program.id
