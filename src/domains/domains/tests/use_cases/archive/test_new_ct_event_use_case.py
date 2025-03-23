@@ -1,6 +1,6 @@
 import pytest
 
-from asman.domains.domains.use_cases import (
+from asman.domains.domains.use_cases.archive import (
     NewCtEventUseCase,
     SubscribeNewDomainsUseCase,
 )
