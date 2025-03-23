@@ -3,16 +3,17 @@ from pydantic_settings import BaseSettings
 from typing import List, Dict
 
 from asman.core.arch import AbstractUseCase
-from asman.core.adapters.db import Postgres, PostgresConfig
+from asman.core.adapters.db import DatabaseFacade, Databases
 
 from asman.domains.domains.repo import DomainRepository
 from asman.core.adapters.clients.crtsh import CrtshClient
 
 
 class DomainsFromCertsUseCase(AbstractUseCase):
-    def __init__(self, config: BaseSettings, databaseConfig: PostgresConfig, *argv) -> None:
-        database = Postgres(databaseConfig)
-        self.repo = DomainRepository(database)
+    def __init__(self) -> None:
+        self.repo = DomainRepository(
+            DatabaseFacade(Databases.PostgreSQL),
+        )
 
     async def execute(self, domains: List[str]) -> List[str]:
         result: Dict[str, List[str]] = dict()

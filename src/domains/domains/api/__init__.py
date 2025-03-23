@@ -3,8 +3,11 @@ from .schema import (
     ChangesField,
     NewCertificateEvent,
     FACEBOOK_EVENT,
+    Domain,
+    SearchByDomain,
+    SearchByParentDomain,
 )
-from .exceptions import WrongEventTypeException
+from .exceptions import WrongEventTypeException, IncorrectDomainException
 from .pem import get_domains_from_certificate
 
 
@@ -16,4 +19,9 @@ __all__ = [
     get_domains_from_certificate,
 
     WrongEventTypeException,
+    IncorrectDomainException,
+
+    Domain,
+    SearchByDomain,
+    SearchByParentDomain,
 ]

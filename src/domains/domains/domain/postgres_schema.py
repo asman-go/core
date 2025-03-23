@@ -1,6 +1,8 @@
-from asman.core.adapters.db.postgres import TableBase
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
+from asman.core.adapters.db.postgresql import TableBase
+from sqlalchemy import Column, String
 from sqlalchemy.schema import PrimaryKeyConstraint
+from asman.domains.domains.api import Domain
+
 
 TABLE_DOMAINS_NAME = 'ctdomains'
 
@@ -13,4 +15,12 @@ class TableDomain(TableBase):
 
     __table_args__ = (
         PrimaryKeyConstraint('domain', 'parent_domain'),
+        {'extend_existing': True},
     )
+
+    @staticmethod
+    def convert(item: 'TableDomain') -> Domain:
+        return Domain(
+            domain=item.domain,
+            parent_domain=item.parent_domain,
+        )

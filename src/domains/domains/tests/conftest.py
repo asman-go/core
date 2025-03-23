@@ -1,7 +1,11 @@
 import pytest
 import pydantic
 
-from asman.core.adapters.tests import db_in_memory, postgres, postgres_config, facebook_config
+from asman.core.adapters.db import DatabaseFacade, Databases
+from asman.core.adapters.db.tests import postgres_facade
+from asman.core.adapters.db.postgresql.tests import init_postgres_envs, postgres_instance
+
+from asman.core.adapters.tests import facebook_config
 from asman.domains.domains.api import NewCertificateEvent
 from asman.domains.domains.repo import DomainRepository
 from asman.domains.domains.use_cases import (
@@ -9,6 +13,7 @@ from asman.domains.domains.use_cases import (
     SubscribeNewDomainsUseCase,
     UnsubscribeDomainsUseCase,
 )
+from asman.domains.domains.domain import TABLE_DOMAINS_NAME
 
 
 @pytest.fixture
@@ -43,20 +48,35 @@ def new_certificate_event(new_certificate_event_json):
 
 
 @pytest.fixture
-def domain_repository(db_in_memory) -> DomainRepository:
-    return DomainRepository(db_in_memory)
+def domain_table_name() -> str:
+    return TABLE_DOMAINS_NAME
+
+@pytest.fixture
+def database(postgres_facade) -> DatabaseFacade:
+    return postgres_facade
+
+
+@pytest.fixture(autouse=True)
+def clear_tables(postgres_instance):
+    # Перед каждым тестом очищаем таблицы
+    postgres_instance.delete_all(TABLE_DOMAINS_NAME)
 
 
 @pytest.fixture
-def new_ct_event_use_case(postgres_config):
-    return NewCtEventUseCase(None, postgres_config)
+def domain_repository(database, domain_table_name) -> DomainRepository:
+    return DomainRepository(database, domain_table_name)
 
 
 @pytest.fixture
-def subscribe_new_domains_use_case(facebook_config, postgres_config):
-    return SubscribeNewDomainsUseCase(facebook_config, postgres_config)
+def new_ct_event_use_case():
+    return NewCtEventUseCase()
 
 
 @pytest.fixture
-def unsubscribe_domains_use_case(facebook_config, postgres_config):
-    return UnsubscribeDomainsUseCase(facebook_config, postgres_config)
+def subscribe_new_domains_use_case(facebook_config):
+    return SubscribeNewDomainsUseCase(facebook_config)
+
+
+@pytest.fixture
+def unsubscribe_domains_use_case(facebook_config):
+    return UnsubscribeDomainsUseCase(facebook_config)

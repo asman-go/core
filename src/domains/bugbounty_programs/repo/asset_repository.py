@@ -49,7 +49,7 @@ class AssetRepository(AbstractRepository):
             )
         )
 
-    async def delete(self, filter: Sequence[AssetId] | Sequence[ProgramId]):
+    async def delete(self, filter: Sequence[AssetId] | Sequence[ProgramId]) -> Sequence[AssetId]:
         ids = self.database.delete(self.table_name, filter)
 
         return list(

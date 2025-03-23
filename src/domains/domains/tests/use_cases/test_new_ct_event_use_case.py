@@ -11,13 +11,6 @@ from asman.domains.domains.api import (
 )
 
 
-def test_new_ct_event_use_case_create():
-    use_case = NewCtEventUseCase(None, None)
-
-    assert use_case, 'Use case is not created'
-    assert use_case.repo, 'Repo property not found'
-
-
 @pytest.mark.asyncio
 async def test_new_ct_event_use_case_execute(
             new_ct_event_use_case: NewCtEventUseCase,

@@ -1,87 +1,59 @@
 from typing import Sequence, Dict, List
+from pydantic import BaseModel
 
-from sqlalchemy import select, update, delete, insert
-from sqlalchemy.dialects.postgresql import insert as postgres_insert
-from sqlalchemy.orm import Session
-
-from asman.core.adapters.db import Database, Postgres
-from asman.core.arch import AbstractRepository, Entity
+from asman.core.adapters.db import DatabaseFacade
+from asman.core.arch import AbstractRepository
 from asman.core.exceptions import NotImplementedException
 
+from asman.domains.domains.api import Domain, SearchByDomain, SearchByParentDomain
 from asman.domains.domains.domain import (
     TableDomain,
+    TABLE_DOMAINS_NAME,
 )
-from asman.domains.domains.utils import check_domain
+from asman.domains.domains.utils import filter_domains
 
 
 class DomainRepository(AbstractRepository):
-    def __init__(self, database: Postgres) -> None:
+    def __init__(self, database: DatabaseFacade, table_name: str) -> None:
         self.database = database
+        self.table_name = table_name
 
-    async def insert(self, entities: Dict[str, List[str]]) -> None:
+    async def insert(self, entities: Dict[str, List[str]]) -> Sequence[Domain]:
+        domains = filter_domains(entities)
+        inserted_domains = self.database.upsert(TABLE_DOMAINS_NAME, domains)
 
-        with Session(self.database.engine) as session:
-            domains = list()
-            for parent_domain in entities:
-                if check_domain(parent_domain):
-                    domains.extend(
-                        filter(
-                            lambda domain: domain is not None,
-                            map(
-                                lambda domain: {
-                                    'domain': domain,
-                                    'parent_domain': parent_domain.replace('*.', ''),
-                                } if check_domain(domain) else None,
-                                # TableDomain(
-                                #     domain=domain,
-                                #     parent_domain=parent_domain
-                                # ),
-                                entities[parent_domain]
-                            )
-                        )
-                    )
-
-            stmt = (
-                postgres_insert(TableDomain)
-                .values(domains)
-                # Чтобы использовать эту функцию, надо использовать insert из диалекта postgres, а не общую
-                .on_conflict_do_nothing()
+        return list(
+            map(
+                lambda domain: TableDomain.convert(domain),
+                inserted_domains,
             )
-            session.execute(stmt)
-            # session.add_all(domains)
-            session.commit()
+        )
 
-    async def update(self, entity: Entity) -> Entity:
+    async def update(self, entities: Sequence[BaseModel]) -> Sequence[BaseModel]:
         raise NotImplementedException
 
-    async def get_by_id(self, entity_id) -> Entity | None:
-        raise NotImplementedException
-
-    async def list(self, parent_domain: str) -> Sequence[str] | None:
-        if not check_domain(parent_domain):
-            return []
-
-        with Session(self.database.engine) as session:
-            rows = (
-                session.query(TableDomain)
-                .filter_by(parent_domain=parent_domain.replace('*.', ''))
-                .all()
+    async def search(self, filter: Sequence[SearchByDomain] | Sequence[SearchByParentDomain]) -> Sequence[Domain]:
+        return list(
+            map(
+                lambda domain: TableDomain.convert(domain),
+                self.database.query(self.table_name, filter)
             )
+        )
 
-            return list(
-                map(
-                    lambda x: x.domain,
-                    rows
-                )
+    async def list(self) -> Sequence[Domain]:
+        return list(
+            map(
+                lambda domain: TableDomain.convert(domain),
+                self.database.query(self.table_name)
             )
+        )
 
-    async def delete(self, parent_domain: str):
-        if check_domain(parent_domain):
-            
-            with Session(self.database.engine) as session:
-                stmt = (
-                    delete(TableDomain)
-                    .where(TableDomain.parent_domain == parent_domain.replace('*.', ''))
-                )
-                session.execute(stmt)
-                session.commit()
+    async def delete(self, filter: Sequence[SearchByDomain] | Sequence[SearchByParentDomain]) -> Sequence[BaseModel]:
+        removed_domains = self.database.delete(self.table_name, filter)
+
+        return list(
+            map(
+                lambda domain: TableDomain.convert(domain),
+                removed_domains,
+            )
+        )

@@ -1,20 +1,22 @@
 from functools import reduce
-from pydantic_settings import BaseSettings
 
 from asman.core.arch import AbstractUseCase
-from asman.core.adapters.db import Postgres, PostgresConfig
+from asman.core.adapters.db import DatabaseFacade, Databases
 
 from asman.domains.domains.api import (
     FacebookCtEvent,
 )
 from asman.domains.domains.repo import DomainRepository
 from asman.domains.domains.utils import join
+from asman.domains.domains.domain import TABLE_DOMAINS_NAME
 
 
 class NewCtEventUseCase(AbstractUseCase):
-    def __init__(self, config: BaseSettings, databaseConfig: PostgresConfig, *argv) -> None:
-        database = Postgres(databaseConfig)
-        self.repo = DomainRepository(database)
+    def __init__(self) -> None:
+        self.repo = DomainRepository(
+            DatabaseFacade(Databases.PostgreSQL),
+            TABLE_DOMAINS_NAME,
+        )
 
     async def execute(self, request: FacebookCtEvent) -> bool:
         changes = list()
