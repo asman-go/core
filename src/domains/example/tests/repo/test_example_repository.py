@@ -2,8 +2,8 @@ from asman.domains.example.repo.example_repository import ExampleRepository
 from asman.domains.example.api import SearchFilter
 
 
-def test_example_repository_create(database):
-    repo = ExampleRepository(database)
+def test_example_repository_create(database, dynamodb_table_name):
+    repo = ExampleRepository(database, dynamodb_table_name)
 
     assert repo
     assert repo.database

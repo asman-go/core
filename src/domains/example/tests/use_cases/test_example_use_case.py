@@ -17,7 +17,7 @@ def test_example_use_case_create(usecase_config, init_dynamodb_envs):
     assert use_case.repo
 
 
-def test_example_use_case_execute(example_use_case):
+def test_example_use_case_execute(example_use_case, init_dynamodb_envs):
     request = Request(
         data='test'
     )

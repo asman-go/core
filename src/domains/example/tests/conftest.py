@@ -6,6 +6,7 @@ from asman.domains.example.domain.example_entity import ExampleData
 
 from asman.domains.example.domain import TABLE_NAME
 from asman.domains.example.repo.example_repository import ExampleRepository
+from asman.core.adapters.db.tests import dynamodb_facade
 from asman.core.adapters.db.dynamodb.tests import init_dynamodb_envs
 
 
@@ -35,13 +36,10 @@ def dynamodb_table_name():
 
 
 @pytest.fixture
-def database(init_dynamodb_envs, dynamodb_table_name) -> DatabaseFacade:
-    return DatabaseFacade(
-        Databases.DynamoDB,
-        dynamodb_table_name,
-    )
+def database(dynamodb_facade) -> DatabaseFacade:
+    return dynamodb_facade
 
 
 @pytest.fixture
-def example_repository(database):
-    return ExampleRepository(database)
+def example_repository(database, dynamodb_table_name):
+    return ExampleRepository(database, dynamodb_table_name)

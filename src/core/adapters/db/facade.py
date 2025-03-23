@@ -25,32 +25,23 @@ class Databases(IntEnum):
 
 class DatabaseFacade:
     _database: DatabaseInterface
-    _table_name: str | None
 
-    def __init__(self, database: Databases, table_name: str | None = None):
-        self._table_name = table_name
-
+    def __init__(self, database: Databases):
         if database == Databases.PostgreSQL:
             self._database = Postgres()
 
         if database == Databases.DynamoDB:
             self._database = DynamoDB()
 
-    def upsert(self, items: List[BaseModel], table_name: str | None = None) -> List:
+    def upsert(self, table_name: str, items: List[BaseModel]) -> List:
         # TODO: Возможно, должны быть реализованы обе стратегии — on conflict update и on conflict ignore
+        return self._database.upsert(table_name, unique(items))
 
-        _table_name = table_name if table_name else self._table_name
+    def query(self, table_name: str, query: List[BaseModel] = []) -> List[BaseModel]:
+        return self._database.items(table_name, query)
 
-        return self._database.upsert(_table_name, unique(items))
+    def delete(self, table_name: str, items: List[BaseModel]) -> List:
+        return self._database.delete(table_name, items)
 
-    def query(self, query: List[BaseModel] = [], table_name: str | None = None) -> List[BaseModel]:
-        _table_name = table_name if table_name else self._table_name
-        return self._database.items(_table_name, query)
-
-    def delete(self, items: List[BaseModel], table_name: str | None = None) -> List:
-        _table_name = table_name if table_name else self._table_name
-        return self._database.delete(_table_name, items)
-
-    def clear(self, table_name: str | None = None) -> List:
-        _table_name = table_name if table_name else self._table_name
-        return self._database.delete_all(_table_name)
+    def clear(self, table_name: str) -> List:
+        return self._database.delete_all(table_name)

@@ -7,7 +7,7 @@ from asman.core.adapters.db import DatabaseFacade
 
 class AbstractRepository(ABC):
     @abstractmethod
-    def __init__(self, database: DatabaseFacade) -> None:
+    def __init__(self, database: DatabaseFacade, table_name: str) -> None:
         ...
 
     @abstractmethod

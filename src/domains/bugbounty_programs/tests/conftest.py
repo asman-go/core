@@ -26,7 +26,13 @@ from asman.domains.bugbounty_programs.use_cases import (
 
 from asman.core.adapters.tests import db_in_memory, postgres, postgres_config
 from asman.core.adapters.db.postgresql import Postgres
+from asman.core.adapters.db import DatabaseFacade, Databases
+from asman.core.adapters.db.postgresql.tests import init_postgres_envs
 
+
+@pytest.fixture
+def postgres_facade(init_postgres_envs) -> DatabaseFacade:
+    return DatabaseFacade(Databases.PostgreSQL)
 
 @pytest.fixture
 def init_postgres_envs(monkeypatch):

@@ -5,7 +5,7 @@ from asman.core.adapters.db import DatabaseFacade
 from asman.core.arch import AbstractRepository
 from asman.core.exceptions import NotImplementedException
 
-from asman.domains.bugbounty_programs.domain import TableAsset
+from asman.domains.bugbounty_programs.domain import TableAsset, TABLE_ASSET_NAME
 from asman.domains.bugbounty_programs.api import LinkedAsset, Asset
 
 
@@ -17,8 +17,8 @@ class AssetRepository(AbstractRepository):
         raise NotImplementedException
 
     async def update(self, entities: Sequence[LinkedAsset]) -> Sequence[Asset]:
-        ids = self.database.upsert(entities)
-        return self.database.query(ids)
+        ids = self.database.upsert(TABLE_ASSET_NAME, entities)
+        return self.database.query(TABLE_ASSET_NAME, ids)
 
     async def search(self, filter: Sequence[BaseModel]) -> Sequence[BaseModel]:
         raise NotImplementedException
