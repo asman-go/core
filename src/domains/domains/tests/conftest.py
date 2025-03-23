@@ -12,6 +12,7 @@ from asman.domains.domains.use_cases import (
     NewCtEventUseCase,
     SubscribeNewDomainsUseCase,
     UnsubscribeDomainsUseCase,
+    DomainsFromCertsUseCase,
 )
 from asman.domains.domains.domain import TABLE_DOMAINS_NAME
 
@@ -80,3 +81,8 @@ def subscribe_new_domains_use_case(facebook_config):
 @pytest.fixture
 def unsubscribe_domains_use_case(facebook_config):
     return UnsubscribeDomainsUseCase(facebook_config)
+
+
+@pytest.fixture
+def domains_from_crtsh_use_case():
+    return DomainsFromCertsUseCase()

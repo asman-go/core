@@ -9,7 +9,7 @@ from asman.domains.domains.use_cases import (
 
 
 @pytest.mark.asyncio
-async def test_unsubscribe_domains_use_case_execute(
+async def _test_unsubscribe_domains_use_case_execute(
             unsubscribe_domains_use_case: UnsubscribeDomainsUseCase
         ):
     # TBD

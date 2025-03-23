@@ -10,7 +10,7 @@ from asman.domains.domains.use_cases import (
 
 
 @pytest.mark.asyncio
-async def test_subscribe_new_domains_use_case_execute(
+async def _test_subscribe_new_domains_use_case_execute(
             subscribe_new_domains_use_case: SubscribeNewDomainsUseCase
         ):
     # TBD

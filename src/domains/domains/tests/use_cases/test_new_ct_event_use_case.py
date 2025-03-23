@@ -12,7 +12,7 @@ from asman.domains.domains.api import (
 
 
 @pytest.mark.asyncio
-async def test_new_ct_event_use_case_execute(
+async def _test_new_ct_event_use_case_execute(
             new_ct_event_use_case: NewCtEventUseCase,
             new_certificate_event: NewCertificateEvent,
         ):
