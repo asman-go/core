@@ -4,7 +4,7 @@ from typing import Iterable, Sequence
 from asman.core.arch import AbstractUseCase
 from asman.core.adapters.db import DatabaseFacade, Databases
 
-from asman.domains.bugbounty_programs.api import Asset, NewProgram, Program, SearchByID
+from asman.domains.bugbounty_programs.api import ProgramNotFound, Program, SearchByID
 from asman.domains.bugbounty_programs.repo import ProgramRepository
 from asman.domains.bugbounty_programs.domain import TABLE_BUGBOUNTY_PROGRAM_NAME
 
@@ -28,6 +28,9 @@ class ReadProgramByIdUseCase(AbstractUseCase):
         )
 
     async def execute(self, request: SearchByID) -> Program:
-        program = await self.repo.search([request])
+        programs = await self.repo.search([request])
 
-        return program[0]
+        if not programs:
+            raise ProgramNotFound('ReadProgramByIdUseCase: программа не обнаружена')
+
+        return programs[0]

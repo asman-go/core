@@ -25,6 +25,6 @@ class DeleteProgramUseCase(AbstractUseCase):
         ids = await self.repo_programs.delete([request])
 
         if not ids:
-            raise ProgramNotFound('Попытали удалить программу, которой нет')
+            raise ProgramNotFound('DeleteProgramUseCase: Попытали удалить программу, которой нет')
 
         return ids[0]
