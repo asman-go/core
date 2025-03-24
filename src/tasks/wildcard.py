@@ -1,5 +1,5 @@
 from asman.core.arch import AbstractTask
-from asman.core import SendTaskMessage
+from asman.core.arch import SendTaskMessage
 
 from ._tasks import Task
 from .models import (
