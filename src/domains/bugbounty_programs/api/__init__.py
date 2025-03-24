@@ -15,6 +15,11 @@ from .schema import (
     # CreateProgramResponse,
 )
 
+from .exceptions import (
+    ProgramNotFound,
+)
+
+
 __all__ = [
     AddAssetsRequest,
     RemoveAssetsRequest,
@@ -30,4 +35,6 @@ __all__ = [
     SearchByID,
     # CreateProgramRequest,
     # CreateProgramResponse,
+
+    ProgramNotFound,
 ]

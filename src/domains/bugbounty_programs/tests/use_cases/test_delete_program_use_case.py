@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 
-from asman.domains.bugbounty_programs.api import SearchByID
+from asman.domains.bugbounty_programs.api import SearchByID, ProgramNotFound
 from asman.domains.bugbounty_programs.use_cases import DeleteProgramUseCase
 
 
@@ -23,5 +23,5 @@ async def test_delete_program_use_case_execute(delete_program_use_case: DeletePr
     assert len(program) == 0
 
     # Пробую удалить несуществующую программу -> Exception
-    # _deleted_program_id = await delete_program_use_case.execute(SearchByID(id=1241351325))
-    # assert _deleted_program_id == 1
+    with pytest.raises(ProgramNotFound):
+        await delete_program_use_case.execute(SearchByID(id=1241351325))
