@@ -30,7 +30,10 @@ Issues = "https://github.com/asman-go/core/issues"
 
 # dependencies
 [tool.hatch.metadata.hooks.requirements_txt]
-files = ["requirements.txt"]
+files = [
+    "src/core/requirements.txt",
+    "src/tasks/requirements.txt"
+]
 
 # optional-dependencies
 [tool.hatch.metadata.hooks.requirements_txt.optional-dependencies]
