@@ -7,6 +7,8 @@ Tests:
 
 ```
 python -m pytest .
+python -m pytest src/tasks/recon/tests
+python -m pytest -m "not inet" src/tasks/recon/tests  (запуск по маркерам и путям)
 ```
 
 Для тестов нужна постгря локальная:

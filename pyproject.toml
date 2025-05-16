@@ -102,3 +102,8 @@ features = [
 
 [tool.hatch.envs.test]
 dependencies = []
+
+[tool.pytest.ini_options]
+markers = [
+    "inet: этим тестам надо ходить в Интернет",
+]
