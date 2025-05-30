@@ -9,6 +9,7 @@ from asman.domains.services.repo import DomainRepository
 from asman.domains.services.api import Domain
 from asman.domains.services.domain import TABLE_DOMAINS_NAME
 from asman.core.adapters.clients.crtsh import CrtshClient
+from asman.tasks.recon import ReconDomainsFromCertsTask
 
 
 class DomainsFromCertsUseCase(AbstractUseCase):
@@ -20,6 +21,15 @@ class DomainsFromCertsUseCase(AbstractUseCase):
 
     async def execute(self, domains: List[str]) -> List[Domain]:
         result: Dict[str, List[str]] = dict()
+
+        print('DomainsFromCertsUseCase inp', domains)
+
+        _result = ReconDomainsFromCertsTask.delay(domains)
+        result = _result.get()
+
+        print('DomainsFromCertsUseCase out', result)
+
+        return await self.repo.insert(result)
 
         async with CrtshClient() as crtsh_client:
             async def get_certificates(domain: str):

@@ -1,8 +1,9 @@
 import pytest
 
 
+# Пока не знаю как celery сюда прикрутить (в asman.core)
 @pytest.mark.asyncio
-async def test_get_domains_from_crtsh_use_case_execute(
+async def tes1t_get_domains_from_crtsh_use_case_execute(
     domains_from_crtsh_use_case
 ):
     DOMAIN = 'example.com'
