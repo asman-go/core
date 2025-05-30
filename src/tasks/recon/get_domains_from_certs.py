@@ -5,13 +5,7 @@ from typing import Iterable, Dict, List
 from asman.core.adapters.clients.crtsh import CrtshClient
 
 
-@shared_task
-async def get_domains_from_crtsh(domains: Iterable[str]):
-    """
-        Таска берет пачку доменов (domains) и идет с ними в crt.sh
-        Из сертов вытаскивает новые домены и отдает их как есть
-    """
-
+async def _get_domains_from_crtsh(domains: Iterable[str]):
     result: Dict[str, List[str]] = dict()
 
     async def get_certificates(client: CrtshClient, domain: str):
@@ -30,3 +24,12 @@ async def get_domains_from_crtsh(domains: Iterable[str]):
         await asyncio.gather(*[get_certificates(crtsh_client, domain) for domain in domains])
 
     return result
+
+
+@shared_task
+def get_domains_from_crtsh(domains: Iterable[str]):
+    """
+        Таска берет пачку доменов (domains) и идет с ними в crt.sh
+        Из сертов вытаскивает новые домены и отдает их как есть
+    """
+    return asyncio.run(_get_domains_from_crtsh(domains))
