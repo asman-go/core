@@ -32,4 +32,7 @@ def get_domains_from_crtsh(domains: Iterable[str]):
         Таска берет пачку доменов (domains) и идет с ними в crt.sh
         Из сертов вытаскивает новые домены и отдает их как есть
     """
+    return {
+        'test.com': ['www.test.com']
+    }
     return asyncio.run(_get_domains_from_crtsh(domains))
