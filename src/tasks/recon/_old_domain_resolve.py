@@ -2,12 +2,10 @@ import dns.resolver
 from dns.rdatatype import RdataType
 import typing
 
-from asman.core.arch import AbstractTask
-
 from ..models import Domain
 
 
-class DomainResolveTask(AbstractTask):
+class DomainResolveTask():
 
     @staticmethod
     def ip(domain: str, record_type: RdataType) -> typing.Sequence[str]:

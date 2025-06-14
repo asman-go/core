@@ -6,7 +6,6 @@ grpcio-tools
 mock
 pydantic
 pydantic_settings
-pypubsub
 
 # Postgres support
 databases

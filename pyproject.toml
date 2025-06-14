@@ -46,6 +46,9 @@ bugbounty_programs = [
 services = [
     "src/domains/services/requirements.txt",
 ]
+client = [
+    "src/client/requirements.txt",
+]
 # all = ["requirements-all.txt"]
 
 # Кодогенерация -> мы можем запустить любую программу: https://github.com/rmorshea/hatch-build-scripts
@@ -76,6 +79,7 @@ exclude = [
 require-runtime-dependencies = true
 ignore-vcs = true
 only-include = [
+    "src/client",
     "src/core",
 
     "src/tasks",
@@ -86,6 +90,7 @@ only-include = [
 ]
 
 [tool.hatch.build.targets.wheel.sources]
+"src/client" = "asman/client"
 "src/core" = "asman/core"
 "src/tasks" = "asman/tasks"
 "src/domains/bugbounty_programs" = "asman/domains/bugbounty_programs"

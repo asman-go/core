@@ -1,3 +1,6 @@
+deps-client:
+	@python -m pip install "."[client]
+
 deps:
 	@echo 'Переустанавливаем зависимости'
 	@python -m pip uninstall -y asman
