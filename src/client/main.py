@@ -19,6 +19,6 @@ class Asman(object):
     def programs(self) -> ClientCRUD[int]:
         # self.programs = ProgramsAPI(api_url)
         return ClientCRUD(
-            base_url=f'{self._api_url}/api/private/program',
+            base_url=f'{self._api_url}/api/private/program/',
             client=uplink.RequestsClient(session=self._session),
         )

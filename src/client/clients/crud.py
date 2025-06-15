@@ -10,6 +10,7 @@ T = TypeVar('T')
     'User-Agent': CLIENT_UA,
 })
 class ClientCRUD(uplink.Consumer, Generic[T]):
+
     @no_type_check
     @parse_response(Mapping)
     @uplink.json
